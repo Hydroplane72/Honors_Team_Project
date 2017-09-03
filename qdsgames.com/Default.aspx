@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/qdsgames/Main.master" 
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.master" 
     AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="qdsgames_Default" %>
 
 

@@ -27,20 +27,20 @@
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
 
-
+                        <!--
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                             <span class="sr-only"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-
+                        -->
                         <img src="images/LogoDesign.png" height="100" width="125" class="navbar-brand" />
                         <a class="navbar-text" href="Default.aspx">QDSGames</a>
                     </div>
 
                     <!-- content for toggling -->
-
+                    <!--
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="Default.aspx">Home</a></li>
