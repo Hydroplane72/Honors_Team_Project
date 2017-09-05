@@ -1,0 +1,26 @@
+﻿*, body {
+    margin:0;
+    border:0;
+    padding: 0;
+    padding-top: 0;
+}
+.left_bar {
+    border: 1px solid #0f0;
+    float: left;
+    width: 200px;
+}
+.right_bar {
+    border: 1px solid #0f0;
+    float: right;
+    width: 250px;
+}
+.main_content {
+    border: 1px solid #000;
+    margin-left: 200px;
+    margin-right: 250px;
+}
+#form1 {
+    overflow: hidden;
+    width: 100%;
+    min-width: 800px;
+}

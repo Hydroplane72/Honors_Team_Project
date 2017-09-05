@@ -12,12 +12,21 @@
     <!-- Links for styleseets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="css/uxcore.css" rel="stylesheet">
     <link href="css/customer-comp.css" rel="stylesheet">
+
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
+    <style>
+        * {
+            padding-top: 0;
+            margin: 0;
+            border: 0;
+        }
+    </style>
+    <link href="css/LayoutCTRL.css" rel="stylesheet" />
 </head>
+
 <body>
     <form id="form1" runat="server">
         <div>
@@ -35,7 +44,7 @@
                             <span class="icon-bar"></span>
                         </button>
                         -->
-                        <img src="images/LogoDesign.png" height="100" width="125" class="navbar-brand" />
+                        <img src="images/LogoDesign.png" class="navbar-brand" />
                         <a class="navbar-text" href="Default.aspx">QDSGames</a>
                     </div>
 
@@ -55,13 +64,29 @@
                                 </ul>
                             </li>
                         </ul>
-                    </div>
+                    </div> 
+                        
                     <!-- /.navbar-collapse -->
                 </div>
-                <!-- /.container-fluid -->
-            </nav>
-            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        <!-- /.container-fluid -->
+        </nav>
+            <!--content stuff-->
+        <!--left bar on site-->
+        <div class="left_bar">
+            <asp:ContentPlaceHolder ID="left_bar" runat="server">
             </asp:ContentPlaceHolder>
+        </div>
+        <!-- right bar on site -->
+        <div class="right_bar">
+            <asp:ContentPlaceHolder ID="right_bar" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <!-- stuff in middle -->
+        <div class="main_content">
+            <asp:ContentPlaceHolder ID="main_content" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+
         </div>
     </form>
 </body>
