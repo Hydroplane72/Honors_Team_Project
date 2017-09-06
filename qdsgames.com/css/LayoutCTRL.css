@@ -24,3 +24,14 @@
     width: 100%;
     min-width: 800px;
 }
+html {
+    padding: 75px;
+    padding-top: 0px;
+    padding-bottom:50px;
+    background-image: url("../images/Social_Icons/ALL_em.png");
+    background-repeat: repeat;
+    background-size: 25% 25%;
+}
+body {
+    border:5px groove black;
+}

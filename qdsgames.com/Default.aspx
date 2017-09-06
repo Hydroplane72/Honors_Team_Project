@@ -3,66 +3,48 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <link href="css/MainUserPage.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="left_bar" Runat="Server">
     <!--Main Content
         -->
     <div class="btn-group">
-        <h1>Random filler words</h1>
-        <p> Lorem ipsum dolor sit amet, qui brute doctus an. Melius percipit intellegebat his no. 
-            Veritus definitiones quo ex. Pro te scaevola indoctum definiebas, nec legere inciderint 
-            et. Vis ad ludus ridens cotidieque. Elitr legere salutatus pri in, ne postea oportere vim.
-        </p>
-        <p> Cu ius dicta dolor dicam, suavitate abhorreant eos ad, pro eu iusto denique. Sint utamur
-            at nam, epicuri evertitur mea an, eleifend accusamus interesset sed no. Ad vel iisque praesent.
-            Ad phaedrum definiebas eam, zril vocibus recteque nam an. Est an case magna erant.
-        </p>
-
-        <p> Eum te brute adipiscing. Sed suavitate neglegentur ex. Aperiri debitis eam ea, sed in deleniti
-            tractatos periculis. Vis porro audire fierent eu, posse fabulas nam te. Vix et wisi error audire,
-            doming nonumes suscipit vix ei.
-        </p>
-
         
+        <p>Page activity</p>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        
+        </div>
+    <div class="btn-group">
+        <p>Recent Actions</p>
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="right_bar" Runat="Server">
+    
     <div class="btn-group">
-        <h1>Random filler words</h1>
-        <p> Lorem ipsum dolor sit amet, qui brute doctus an. Melius percipit intellegebat his no. 
-            Veritus definitiones quo ex. Pro te scaevola indoctum definiebas, nec legere inciderint 
-            et. Vis ad ludus ridens cotidieque. Elitr legere salutatus pri in, ne postea oportere vim.
-        </p>
-        <p> Cu ius dicta dolor dicam, suavitate abhorreant eos ad, pro eu iusto denique. Sint utamur
-            at nam, epicuri evertitur mea an, eleifend accusamus interesset sed no. Ad vel iisque praesent.
-            Ad phaedrum definiebas eam, zril vocibus recteque nam an. Est an case magna erant.
-        </p>
-
-        <p> Eum te brute adipiscing. Sed suavitate neglegentur ex. Aperiri debitis eam ea, sed in deleniti
-            tractatos periculis. Vis porro audire fierent eu, posse fabulas nam te. Vix et wisi error audire,
-            doming nonumes suscipit vix ei.
-        </p>
-
-        
+                <p>Friends List</p>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="main_content" Runat="Server">
-    <div class="btn-group">
-        <h1>Random filler words</h1>
-        <p> Lorem ipsum dolor sit amet, qui brute doctus an. Melius percipit intellegebat his no. 
-            Veritus definitiones quo ex. Pro te scaevola indoctum definiebas, nec legere inciderint 
-            et. Vis ad ludus ridens cotidieque. Elitr legere salutatus pri in, ne postea oportere vim.
-        </p>
-        <p> Cu ius dicta dolor dicam, suavitate abhorreant eos ad, pro eu iusto denique. Sint utamur
-            at nam, epicuri evertitur mea an, eleifend accusamus interesset sed no. Ad vel iisque praesent.
-            Ad phaedrum definiebas eam, zril vocibus recteque nam an. Est an case magna erant.
-        </p>
+    
+        <h2 id="username">Username here</h2>
+    
+    <table id="social_table">
+        <tr>
+            <td><a href="http://www.facebook.com" target="_blank"><img src="images/Social_Icons/Facebook.png" height="100" width="100"/></a></td>
+            <td><p>Facebook page. </p></td>
+            <td><p>Then facebook post.</p></td>
+        </tr>
+        <tr>
+            <td><a href="http://www.twitch.com" target="_blank"><img src="images/Social_Icons/Twitch.png" height="100" width="100"/></a></td>
+            <td><p>Twitch homepage. </p></td>
+            <td><p>Then Twitch stream or video</p></td>
+        </tr>
+        <tr>
+            <td><a href="http://www.youtube.com" target="_blank"><img src="images/Social_Icons/Youtube.png" height="100" width="100"/></a></td>
+            <td><p>Youtube Homepage.</p></td>
+            <td><p>Then favorite video.</p></td>
+        </tr>
+    </table>
 
-        <p> Eum te brute adipiscing. Sed suavitate neglegentur ex. Aperiri debitis eam ea, sed in deleniti
-            tractatos periculis. Vis porro audire fierent eu, posse fabulas nam te. Vix et wisi error audire,
-            doming nonumes suscipit vix ei.
-        </p>
-
-        
-    </div>
 </asp:Content>

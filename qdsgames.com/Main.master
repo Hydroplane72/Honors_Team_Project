@@ -29,8 +29,8 @@
 
 <body>
     <form id="form1" runat="server">
-        <div>
-            <h1>UNDER DEVELOPMENT</h1>
+        <div class="container">
+            
             <nav class="navbar navbar-inverse" role="navigation">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,7 +44,7 @@
                             <span class="icon-bar"></span>
                         </button>
                         -->
-                        <img src="images/LogoDesign.png" class="navbar-brand" />
+                        <img src="images/Temp_logo.png" class="navbar-brand" />
                         <a class="navbar-text" href="Default.aspx">QDSGames</a>
                     </div>
 
