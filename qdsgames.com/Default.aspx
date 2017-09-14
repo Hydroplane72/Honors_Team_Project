@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Account Creation" Language="C#" MasterPageFile="Main.master"
+﻿<%@ Page Title="Account Creation" Language="C#" MasterPageFile="Pages/Main.master"
     AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="qdsgames_Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -84,6 +84,6 @@
                 </div>
 
             </div>
-        </div>
+        
     </form>
 </asp:Content>
