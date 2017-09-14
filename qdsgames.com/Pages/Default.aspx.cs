@@ -11,4 +11,8 @@ public partial class qdsgames_Default : System.Web.UI.Page
     {
 
     }
+    protected void SubmitButton_Click(object sender, EventArgs e)
+    {
+        
+    }
 }

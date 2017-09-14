@@ -12,4 +12,6 @@
     text-align: left;
     border-bottom: 2px solid grey;
     border-top:2px solid grey;
+    border:1px solid black;
+    height:250px;
 }
