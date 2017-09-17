@@ -52,7 +52,7 @@
                         -->
                     
                     <img src="../images/LogoCopyRight.png" class="navbar-brand"/>
-                    <a class="navbar-text" href="Default.aspx">QDSGames</a>
+                    <a class="navbar-text" href="../Default.aspx">QDSGames</a>
                 </div>
 
                 <!-- content for toggling -->
