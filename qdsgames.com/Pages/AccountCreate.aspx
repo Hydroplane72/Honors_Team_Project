@@ -67,7 +67,7 @@
                     
                 </div>
                 <div class="next col-sm-4">
-                    <asp:TextBox ID="TextBox1" runat="server" TextMode="Email" CssClass="form-control"></asp:TextBox>
+                    <asp:TextBox ID="TextBox1" runat="server"  CssClass="form-control"></asp:TextBox>
                 </div>
             </div>
             <!-- Email Address Text Box -->
