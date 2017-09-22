@@ -35,7 +35,7 @@
             js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.5";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</script>
-    <div class="container">
+    <div class="container"> 
 
         <nav class="navbar navbar-inverse" role="navigation">
             <div class="container-fluid">
