@@ -27,22 +27,23 @@
 </head>
 
 <body>
-    <div id="fb-root"></div>
-    <script>(function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.5";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));</script>
-    <div class="container"> 
+    
+        <div id="fb-root"></div>
+        <script>(function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.5";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+        <div class="container">
 
-        <nav class="navbar navbar-inverse" role="navigation">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
 
-                    <!--
+                        <!--
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                             <span class="sr-only"></span>
                             <span class="icon-bar"></span>
@@ -50,13 +51,14 @@
                             <span class="icon-bar"></span>
                         </button>
                         -->
-                    
-                    <img src="../images/LogoCopyRight.png" class="navbar-brand"/>
-                    <a class="navbar-text" href="../Default.aspx">QDSGames</a>
-                </div>
 
-                <!-- content for toggling -->
-                <!--
+                        <img src="../images/LogoCopyRight.png" class="navbar-brand" />
+                        <a class="navbar-text" href="../Default.aspx">QDSGames</a>
+                        <asp:Login ID="userLogin" runat="server" Orientation="Horizontal"></asp:Login>
+                    </div>
+
+                    <!-- content for toggling -->
+                    <!--
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="Default.aspx">Home</a></li>
@@ -72,25 +74,26 @@
                     </div>
 
                     <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+            <!--content stuff-->
+            <!--left bar on site-->
+            <div class="left_bar">
+                <asp:ContentPlaceHolder ID="left_bar" runat="server">
+                </asp:ContentPlaceHolder>
             </div>
-            <!-- /.container-fluid -->
-        </nav>
-        <!--content stuff-->
-        <!--left bar on site-->
-        <div class="left_bar">
-            <asp:ContentPlaceHolder ID="left_bar" runat="server">
-            </asp:ContentPlaceHolder>
+            <!-- right bar on site -->
+            <div class="right_bar">
+                <asp:ContentPlaceHolder ID="right_bar" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+            <!-- stuff in middle -->
+            <div class="main_content">
+                <asp:ContentPlaceHolder ID="main_content" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
         </div>
-        <!-- right bar on site -->
-        <div class="right_bar">
-            <asp:ContentPlaceHolder ID="right_bar" runat="server">
-            </asp:ContentPlaceHolder>
-        </div>
-        <!-- stuff in middle -->
-        <div class="main_content">
-            <asp:ContentPlaceHolder ID="main_content" runat="server">
-            </asp:ContentPlaceHolder>
-        </div>
-    </div>
+    
 </body>
 </html>
