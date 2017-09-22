@@ -54,7 +54,8 @@
 
                         <img src="../images/LogoCopyRight.png" class="navbar-brand" />
                         <a class="navbar-text" href="../Default.aspx">QDSGames</a>
-                        <asp:Login ID="userLogin" runat="server" Orientation="Horizontal"></asp:Login>
+                        
+                        
                     </div>
 
                     <!-- content for toggling -->

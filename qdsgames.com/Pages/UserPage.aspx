@@ -2,7 +2,8 @@
     CodeFile="UserPage.aspx.cs" Inherits="qdsgames_Default2" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <link href="css/MainUserPage.css" rel="stylesheet" />
+    
+    <link href="../css/Custom/MainUserPage.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="left_bar" runat="Server">
     <!--Main Content
@@ -52,7 +53,7 @@
         <table id="social_table">
             <tr>
                 <td>
-                    <asp:ImageButton ID="box1Row1" runat="server"/>
+                    <asp:ImageButton ID="box1Row1" runat="server" />
                     <a href="http://www.facebook.com" target="_blank">
                         <img src="../images/Social_Icons/Facebook.png" /></a></td>
                 <td>
