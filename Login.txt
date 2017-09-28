@@ -1,0 +1,8 @@
+@{
+   
+    ViewBag.Title = ViewData["Username"];
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Username"]</h2>
