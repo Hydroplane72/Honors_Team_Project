@@ -43,7 +43,7 @@
                     {
                         <li>
 
-                            <button onclick="document.getElementById('loginModal').style.display='block'" style="width:auto;">Login</button>
+                            <!--<button onclick="document.getElementById('loginModal').style.display='block'" style="width:auto;">Login</button>-->
                         </li>
                         <li>
                             <button onclick="document.getElementById('signUpModal').style.display='block'" style="width:auto;">Register</button>
@@ -58,9 +58,9 @@
                                 <button type="button" class="btn btn-danger dropdown-toggle" style="width:100%;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     <li>Hello @ViewData["Username"]</li>
-                                    <li><a href="#">Edit Account</a></li>
+                                    <li>@Html.ActionLink("Edit account", "AccountEdit", null, new { @class = "btn", @style = "width:auto;" })</li>
                                     <li>
-                                        @Html.ActionLink("Logout", "Logout", "User", new { @class = "btn", @style = "width:auto;" })
+                                        @Html.ActionLink("Logout", "Logout", null, new { @class = "btn", @style = "width:auto;" })
                                     </li>
                                 </ul>
                             </div>
@@ -73,7 +73,11 @@
     <!--Start Login Modal -->
     <link href="~/Content/login.css" rel="stylesheet" />
     <div id="loginModal" class="modal">
-        @using (Html.BeginForm("Login", "User", FormMethod.Post, new { style = "background-color:rgba(59, 59, 169, 0.83);", @class = "modal-content animate" }))
+        @using (Html.BeginForm("Login", "User", new {ReturnUrl = ViewBag.ReturnUrl }
+        ,FormMethod.Post, new {
+            style = "background-color:rgba(59, 59, 169, 0.83);",
+            @class = "modal-content animate"
+        }))
         {
 
         <div class="imgcontainer">
@@ -94,6 +98,9 @@
             @Html.LabelFor(Model=>Model.Password)
             @Html.TextBoxFor(Model=>Model.Password)
             @*@Html.Hidden("Password", Model.Password)*@
+            @*@Html.Hidden("ID", Model.ID = @ViewData["loginModal"])*@
+            <!--This returns the id of the users login-->
+
             <br />
             <button type="submit" formmethod="post">Login</button>
             <input type="checkbox" checked="checked"> Remember me
@@ -105,20 +112,19 @@
         </div>
 
         }
-        
     </div>
     <!--SignUp Modal-->
-    
-    <div id="signUpModal" class="modal"  style = "background-color:rgba(59, 59, 169, 0.83);">
+
+    <div id="signUpModal" class="modal" style="background-color:rgba(59, 59, 169, 0.83);">
 
         <link href="~/Content/signup.css" rel="stylesheet" />
         <span onclick="document.getElementById('signUpModal').style.display='none'" class="close" title="Close Modal">×</span>
-        @using (Html.BeginForm("NewUser", "User", FormMethod.Post, new {  @class = "modal-content animate" }))
+        @using (Html.BeginForm("NewUser", "User", FormMethod.Post, new { @class = "modal-content animate" }))
         {
             <div class="container">
 
                 <span onclick="document.getElementById('signUpModal').style.display='none'" class="close" title="Close Modal">×</span>
-                
+
                 <div class="page-header">
                     <h1>Create Account <small>Just fill this out and you'll be set!</small></h1>
                 </div>
@@ -129,32 +135,30 @@
                 <div class="input-group">
                     <label><b>Email</b></label>
                     <input type="email" placeholder="Enter Email" name="Email" required>
-
                 </div>
                 <div class="input-group">
                     <label><b>Phone</b></label>
                     <input type="tel" placeholder="Enter Phone" name="Phone" required>
-                    
                 </div>
                 <div class="input-group">
                     <label><b>Address</b></label>
                     <input type="text" placeholder="Enter Address" name="Address" required>
-                    
                 </div>
                 <div class="input-group">
                     <label><b>Date of Birth</b></label>
                     <input type="date" class="dob" placeholder="Enter Birthday" name="DOB" required>
-
                 </div>
                 <div class="input-group">
                     <label><b>Password</b></label>
                     <input type="password" placeholder="Enter Password" name="Password" required>
-                    
                 </div>
                 <div class="input-group">
                     <label><b>Repeat Password</b></label>
                     <input type="password" placeholder="Repeat Password" name="RepeatPassword" required>
-                    
+                </div>
+                <div class="input-group">
+                    <label><b>Remember Me</b></label>
+                    @Html.EditorFor(Model => Model.Rememberme)
                 </div>
 
                 <div class="clearfix">
@@ -191,12 +195,12 @@
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017-@DateTime.Now.Year - QDSGames</p>
-        </footer>
     </div>
-
+    <footer>
+        <div class="panel-footer">
+            <p>&copy; 2017-@DateTime.Now.Year - QDSGames</p>
+        </div>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

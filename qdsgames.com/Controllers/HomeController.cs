@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using System.Web.Security;
 
 namespace qdsgames.com.Controllers
 {
@@ -7,22 +8,51 @@ namespace qdsgames.com.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            ViewData["loginModal"] = -100;
             ViewData["Username"] = User.Identity.Name;
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
+            if(User.Identity.IsAuthenticated)
+            {
+                ViewData["loginModal"] = -100;
+                ViewData["Username"] = User.Identity.Name;
+                ViewBag.Message = "Your application description page.";
+            }
+            else
+            {
+                ViewData["Username"] = null;
+            }
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewData["loginModal"] = -100;
+                ViewData["Username"] = User.Identity.Name;
+                ViewBag.Message = "Your application description page.";
+            }
+            else
+            {
+                ViewData["Username"] = null;
+            }
 
             return View();
+        }
+        //Becuase the _Layout go directly to Home
+        public ActionResult Logout()
+        {
+            ViewData["loginModal"] = -100;
+            FormsAuthentication.SignOut();
+            return Redirect("/Home/Index");
+        }
+        public ActionResult AccountEdit()
+        {
+            return Redirect("/User/AccountEdit");
         }
     }
 }
