@@ -112,6 +112,7 @@ namespace qdsgames.com.Models
             //New User and Security
             Users user = new Users();
             SecurityO sec = new SecurityO();
+            //default error number
             sec.ID = -100;
             //Take userName to Uppercase
             string u = username.ToUpper();
@@ -140,7 +141,7 @@ namespace qdsgames.com.Models
             datareader2.Close();
 
             //Make sure the ID was found. If not found close connection
-            if (sec.ID != -100 || sec.ID != 0)
+            if (sec.ID>0)
             {
                 //Input new command
                 command = new SqlCommand(selectMethod2, connection);
@@ -173,6 +174,10 @@ namespace qdsgames.com.Models
 
             //For performance purposes close now
             connection.Close();
+            if(user.Ban==true)
+            {
+                user.Id = -23;//Ban the User
+            }
             if (check == false) //Check failed user either does not exsist or input wrong password.
             {
                 user.Id = -1;

@@ -1,13 +1,18 @@
-﻿using System.Web.Mvc;
+﻿using System.Net;
+using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
 
 namespace qdsgames.com.Controllers
 {
     public class HomeController : Controller
     {
+
         [Authorize]
         public ActionResult Index()
         {
+            //Check if https
+            
             ViewData["loginModal"] = -100;
             ViewData["Username"] = User.Identity.Name;
             return View();

@@ -65,9 +65,14 @@ namespace qdsgames.com.Controllers
                 ViewData["LoginFail"] = "Username or password is incorrect.";
                 return false;
             }
-            if (users.Id == -2)
+            else if (users.Id == -2)
             {
                 ViewData["LoginFail"] = "Username or password is incorrect.";
+                return false;
+            }
+            else if(users.Id == -23)
+            {
+                ViewData["LoginFail"] = "You've been banned.";
                 return false;
             }
             else
