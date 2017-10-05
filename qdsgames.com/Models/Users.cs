@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace qdsgames.com.Models
 {
+    [Table("Users")]
     public class Users
     {
         private int id;
@@ -25,9 +27,10 @@ namespace qdsgames.com.Models
         public Users()
         {
         }
-
+        [Key]
+        [ForeignKey("SecurityO")]
         public int Id { get => id; set => id = value; }
-        [Required]
+        
         [Display(Name = "Username")]
         public string Name { get => name; set => name = value; }
         [Required]
@@ -45,7 +48,7 @@ namespace qdsgames.com.Models
         [Required]
         [Display(Name = "Address")]
         public string Address { get => address; set => address = value; }
-        [Required]
+
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get => password; set => password = value; }

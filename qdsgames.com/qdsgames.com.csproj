@@ -151,6 +151,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DBAO_DBO\SecurityO.cs" />
     <Compile Include="Models\Security\SecureEncrypt.cs" />
     <Compile Include="Models\SessionVariables.cs" />
     <Compile Include="Models\Users.cs" />
@@ -167,11 +168,18 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Pictures\avatar.png" />
+    <Content Include="Pictures\avatarSprite.sprite.css">
+      <DependentUpon>avatarSprite.sprite</DependentUpon>
+    </Content>
+    <Content Include="Pictures\avatarSprite.sprite.png">
+      <DependentUpon>avatarSprite.sprite</DependentUpon>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Pictures\avatarSprite.sprite" />
     <None Include="Properties\PublishProfiles\QDSGames.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

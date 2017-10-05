@@ -1,4 +1,5 @@
 ﻿using qdsgames.com.Models;
+using qdsgames.com.Models.DBAO_DBO;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -24,14 +25,20 @@ namespace qdsgames.com.Controllers
             {
                 users.Repassword = users.Password;
             }
-            if (IsUser(users))
+            if (IsUser(users)) //True if login successfull
             {
+                //Send message to user
+                ViewData["UserLog"] = true;
                 FormsAuthentication.SetAuthCookie(users.Name, users.Rememberme);
+
                 if (model == -100)
                 {
                     return Redirect(modelUrl);
                 }
-
+                if(ReturnUrl== null)
+                {
+                    return Redirect("/Home/Index/");
+                }
                 return Redirect(ReturnUrl);
             }
             else
@@ -44,10 +51,18 @@ namespace qdsgames.com.Controllers
         {
             //Checks database for username and password
             UserDBAccess userDB = new UserDBAccess();
+            
+            //Check username and password are correct otherwise return back to login
+            if(users.Name == null || users.Password==null || users.Repassword==null || users.Repassword != users.Password)
+            {
+                return false;
+            }
+            
             users = userDB.GetUserLogin(users.Name, users.Password);
-
+            
             if (users.Id == -1)
             {
+                ViewData["LoginFail"] = "Username or password is incorrect.";
                 return false;
             }
             if (users.Id == -2)
@@ -59,6 +74,7 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["LoginFail"] = null;
             }
+            users.Id = users.Id;
             SessionVariables.UserData = users; //User authenticated
             ViewData["Username"] = SessionVariables.UserData.Name;
             return true;
@@ -76,7 +92,7 @@ namespace qdsgames.com.Controllers
         public ActionResult Login()
         {
             ViewData["loginModal"] = -100;
-            if (User.Identity.Name == "") //No user is logged into the authentication
+            if (User.Identity.Name == "" || User.Identity.Name==null) //No user is logged into the authentication
             {
                 ViewData["UserKnown"] = false;
                 return View();
@@ -110,8 +126,11 @@ namespace qdsgames.com.Controllers
             users.Dob = System.Convert.ToDateTime(form["DOB"].ToString());
             users.Rememberme = userss.Rememberme;
 
+            SecurityO sec = new SecurityO();
+            sec.Username = users.Name;
+            sec.Password = users.Password;
             //Create user in Database
-            bool correct = UserDBAccess.CreateUserAccount(users);
+            bool correct = UserDBAccess.CreateUserAccount(users, sec);
             if (correct)
             {
                 SessionVariables.UserData = users;
@@ -134,6 +153,7 @@ namespace qdsgames.com.Controllers
             return Redirect("/Home");
         }
 
+        [HttpGet]
         public ActionResult AccountEdit()
         {
             ViewData["UserUpdate"] = "";
@@ -169,8 +189,12 @@ namespace qdsgames.com.Controllers
                     //Get user info- primary ID
                     Users old_user = SessionVariables.UserData;
                     UserDBAccess access = new UserDBAccess();
+                    if(old_user.Id == 0)
+                    {
+                        old_user = access.GetUserInfoByName(User.Identity.Name);
+                    }
                     old_user = access.GetUserInfo(old_user.Id);//Set user database info to the user info
-                                                               //Set Session info to user info
+                                                               
                     SessionVariables.UserData = old_user; //Will be used to help update user account
 
                     return View(old_user);
@@ -203,6 +227,10 @@ namespace qdsgames.com.Controllers
                //Make sure form is valid
                 if (ModelState.IsValid)
                 {
+                    if(users.Name ==null)
+                    {
+                        users.Name = User.Identity.Name;
+                    }
                     //Get the users name
                     string name = User.Identity.Name;
                     UserDBAccess access = new UserDBAccess();

@@ -121,51 +121,51 @@
         <span onclick="document.getElementById('signUpModal').style.display='none'" class="close" title="Close Modal">×</span>
         @using (Html.BeginForm("NewUser", "User", FormMethod.Post, new { @class = "modal-content animate" }))
         {
-            <div class="container">
+        <div class="container">
 
-                <span onclick="document.getElementById('signUpModal').style.display='none'" class="close" title="Close Modal">×</span>
+            <span onclick="document.getElementById('signUpModal').style.display='none'" class="close" title="Close Modal">×</span>
 
-                <div class="page-header">
-                    <h1>Create Account <small>Just fill this out and you'll be set!</small></h1>
-                </div>
-                <div class="input-group">
-                    <label><b>Username</b></label>
-                    <input type="text" placeholder="Enter Username" name="username" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Email</b></label>
-                    <input type="email" placeholder="Enter Email" name="Email" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Phone</b></label>
-                    <input type="tel" placeholder="Enter Phone" name="Phone" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Address</b></label>
-                    <input type="text" placeholder="Enter Address" name="Address" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Date of Birth</b></label>
-                    <input type="date" class="dob" placeholder="Enter Birthday" name="DOB" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Password</b></label>
-                    <input type="password" placeholder="Enter Password" name="Password" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Repeat Password</b></label>
-                    <input type="password" placeholder="Repeat Password" name="RepeatPassword" required>
-                </div>
-                <div class="input-group">
-                    <label><b>Remember Me</b></label>
-                    @Html.EditorFor(Model => Model.Rememberme)
-                </div>
-
-                <div class="clearfix">
-                    <button type="button" onclick="document.getElementById('signUpModal').style.display='none'" class="cancelbtn">Cancel</button>
-                    <button type="submit" class="signupbtn" formmethod="post">Register</button>
-                </div>
+            <div class="page-header">
+                <h1>Create Account <small>Just fill this out and you'll be set!</small></h1>
             </div>
+            <div class="input-group">
+                <label><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label><b>Email</b></label>
+                <input type="email" placeholder="Enter Email" name="Email" required>
+            </div>
+            <div class="input-group">
+                <label><b>Phone</b></label>
+                <input type="tel" placeholder="Enter Phone" name="Phone" required>
+            </div>
+            <div class="input-group">
+                <label><b>Address</b></label>
+                <input type="text" placeholder="Enter Address" name="Address" required>
+            </div>
+            <div class="input-group">
+                <label><b>Date of Birth</b></label>
+                <input type="date" class="dob" placeholder="Enter Birthday" name="DOB" required>
+            </div>
+            <div class="input-group">
+                <label><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="Password" required>
+            </div>
+            <div class="input-group">
+                <label><b>Repeat Password</b></label>
+                <input type="password" placeholder="Repeat Password" name="RepeatPassword" required>
+            </div>
+            <div class="input-group">
+                <label><b>Remember Me</b></label>
+                @Html.EditorFor(Model => Model.Rememberme)
+            </div>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('signUpModal').style.display='none'" class="cancelbtn">Cancel</button>
+                <button type="submit" class="signupbtn" formmethod="post">Register</button>
+            </div>
+        </div>
         }
     </div>
     <!--Login Javascript-->
@@ -193,6 +193,25 @@
         }
     </script>
 
+    <!--UserLoggedIn Message-->
+    <script>
+        //Check if user tried to login or not
+        if (@ViewData["UserLog"] == null) //Check if comming from login form
+        {
+            return; //return and do nothing
+        }
+        else if (@ViewData["UserLog"] == true) //See if log in true
+        {
+            alert("Log in successfull");
+            return;
+        }
+        else if (@ViewData["UserLog"] == false]) //See if log in false
+        {
+            alert("Log in not successfull");
+            return;
+        }
+
+    </script>
     <div class="container body-content">
         @RenderBody()
     </div>
