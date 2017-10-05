@@ -98,7 +98,7 @@ namespace qdsgames.com.Models
             bool check = false;
             //Get Users ID from password and Username
             String selectMethod = "SELECT *" +
-                "FROM Sequrity " +
+                "FROM Security " +
                 "WHERE Username = @name" +
                 " AND Password = @password;";
 
@@ -235,7 +235,7 @@ namespace qdsgames.com.Models
             " (ID, Name, DOB, email, phone, address) " +
             " Values (@ID, @Username, @dob, @email, @phone, @address);";
 
-            string ins2 = "INSERT INTO Sequrity " +
+            string ins2 = "INSERT INTO Security " +
                 " (username, password) " +
                 " Values (@username, @password);";
 
@@ -290,7 +290,7 @@ namespace qdsgames.com.Models
             bool check = false;
             //Get Users ID from password and Username
             String selectMethod = "SELECT *" +
-                "FROM Sequrity " +
+                "FROM Security " +
                 "WHERE Username = @name" +
                 " AND password = @password;";
 
