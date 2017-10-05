@@ -100,7 +100,7 @@ namespace qdsgames.com.Models
             String selectMethod = "SELECT *" +
                 "FROM Sequrity " +
                 "WHERE Username = @name" +
-                " AND password = @password;";
+                " AND Password = @password;";
 
             //Get Users info by ID
             String selectMethod2 = "SELECT * FROM USERS " +
