@@ -1,0 +1,56 @@
+﻿@model IEnumerable<List<qdsgames.com.Models.UserUtil.UserSearch>>
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<div class="containers">
+    <!--Search textbox form-->
+    @using (Html.BeginForm("Search", "User", IsPost))
+    {
+
+        <div class="form-group">
+            @Html.Label("Search")
+            @Html.TextBox("searchUser")
+        </div>
+        <button>Search Users</button>
+    }
+
+    <!--Add Friend Form-->
+    @using (Html.BeginForm("AddFriend", "User", IsPost))
+    {
+        <table name="userTable">
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>AddFriend</th>
+            </tr>
+
+            @foreach (var item in ViewBag.userdetails)
+            {
+
+                <tr>
+                    <td>
+                        @Html.Hidden("UserID", (int) item.id)
+                        @item.id
+                    </td>
+                    <td>
+                        @item.name
+                    </td>
+                    
+                    <td>
+                        @Html.ActionLink("Add Friend", "AddFriend", new { UserID = item.id})
+                    </td>
+                    
+                </tr>  
+            }
+        </table>
+        <script>
+
+            function AddFriend(num)
+            {
+                document.getElementsByName("UserID").values = num;
+            }
+        </script>
+    }
+</div>

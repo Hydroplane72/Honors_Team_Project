@@ -10,17 +10,7 @@ namespace qdsgames.com.Models
     [Table("Users")]
     public class Users
     {
-        private int id;
-        private string name;
-        private DateTime dob;
-        private string email;
-        private string phone;
-        private string address;
-        private int usertype;
-        private bool ban;
-        private string password;
-        private string repassword;
-        private bool rememberme;
+        
         //To convert C# date time to sql datetime
         //string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
@@ -29,38 +19,40 @@ namespace qdsgames.com.Models
         }
         [Key]
         [ForeignKey("SecurityO")]
-        public int Id { get => id; set => id = value; }
+        public int Id { get; set; }
         
         [Display(Name = "Username")]
-        public string Name { get => name; set => name = value; }
+        public string Name { get; set; }
         [Required]
         [Display(Name = "Date of Birth")]
         [DataType(DataType.Date)]
-        public DateTime Dob { get => dob; set => dob = value; }
-        [Required]
+        public DateTime Dob { get; set; }
+        
         [Display(Name = "Email")]
         [EmailAddress]
-        public string Email { get => email; set => email = value; }
-        [Required]
+        public string Email { get; set; }
+        
+
         [Display(Name = "Phone")]
         [Phone]
-        public string Phone { get => phone; set => phone = value; }
+        public string Phone { get; set; }
         [Required]
         [Display(Name = "Address")]
-        public string Address { get => address; set => address = value; }
+        public string Address { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string Password { get => password; set => password = value; }
+        public string Password { get; set; }
+
         [Compare("Password", ErrorMessage = "Passwords mismatch")]
-        public string Repassword { get => repassword; set => repassword = value; }
-        public int Usertype { get => usertype; set => usertype = value; }
-        public bool Ban { get => ban; set => ban = value; }
+        public string Repassword { get; set; }
+        public int Usertype { get; set; }
+        public bool Ban { get; set; }
         
         /// <summary>
         /// For the remember me check boxes
         /// </summary>
-        public bool Rememberme { get => rememberme; set => rememberme = value; }
+        public bool Rememberme { get; set; }
 
 
         /// <summary>
@@ -70,7 +62,7 @@ namespace qdsgames.com.Models
         override
         public string ToString()
         {
-            return name;
+            return Name;
         }
     }
 }

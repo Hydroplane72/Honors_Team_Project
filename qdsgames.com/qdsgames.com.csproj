@@ -18,10 +18,10 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressSSLPort>56399</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -49,6 +49,12 @@
     <IncludeIisSettings>false</IncludeIisSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
     </Reference>
@@ -81,6 +87,8 @@
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -153,16 +161,68 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DBAO_DBO\SecurityO.cs" />
+    <Compile Include="Models\FOLLOW.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FUID.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetAllUsers_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUserFriends_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUserSearchAll_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LVIDEO.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MSLID.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SearchUser_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SECURITY.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Security\SecureEncrypt.cs" />
+    <Compile Include="Models\Security\UserValid.cs" />
     <Compile Include="Models\SessionVariables.cs" />
+    <Compile Include="Models\UCLT.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USER.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\UserDBAccess.cs" />
+    <Compile Include="Models\UsersDataModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UsersDataModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UsersDataModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UsersDataModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UsersDataModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserUtil\FriendInfo.cs" />
+    <Compile Include="Models\UserUtil\UserSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -173,22 +233,31 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Pictures\avatar.png" />
-    <Content Include="Pictures\avatarSprite.sprite.css">
-      <DependentUpon>avatarSprite.sprite</DependentUpon>
+    <Content Include="Models\UsersDataModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UsersDataModel.Context.cs</LastGenOutput>
+      <DependentUpon>UsersDataModel.edmx</DependentUpon>
     </Content>
-    <Content Include="Pictures\avatarSprite.sprite.png">
-      <DependentUpon>avatarSprite.sprite</DependentUpon>
+    <Content Include="Models\UsersDataModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>UsersDataModel.edmx</DependentUpon>
+      <LastGenOutput>UsersDataModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Pictures\avatarSprite.sprite" />
+    <EntityDeploy Include="Models\UsersDataModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>UsersDataModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\UsersDataModel.edmx.diagram">
+      <DependentUpon>UsersDataModel.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\QDSGames.pubxml" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -202,6 +271,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Views\GenErrorPage.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -220,6 +290,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\AccountEdit.cshtml" />
+    <Content Include="Views\User\Search.cshtml" />
+    <Content Include="Views\User\Friends.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
@@ -241,6 +313,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -268,6 +343,8 @@
           <DevelopmentServerPort>56399</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:56399/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>https://localhost:56399/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

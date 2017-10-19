@@ -7,10 +7,10 @@ namespace AesEndDec
 {
     public sealed class SecureEncrypt
     {
-        
+        private static string EncryptionKey = "MAKV2SPBNI99212";
         public static string Encrypt(string clearText)
         {
-            string EncryptionKey = "MAKV2SPBNI99212";
+            
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
             using (Aes encryptor = Aes.Create())
             {
@@ -32,7 +32,6 @@ namespace AesEndDec
 
         public static string Decrypt(string cipherText)
         {
-            string EncryptionKey = "MAKV2SPBNI99212";
 
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
             using (Aes encryptor = Aes.Create())

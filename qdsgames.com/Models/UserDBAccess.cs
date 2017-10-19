@@ -1,5 +1,8 @@
 ﻿using qdsgames.com.Models.DBAO_DBO;
+using qdsgames.com.Models.UserUtil;
+using AesEndDec;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -94,6 +97,7 @@ namespace qdsgames.com.Models
         [DataObjectMethod(DataObjectMethodType.Select)]
         public Users GetUserLogin(string username, string password)
         {
+            password = SecureEncrypt.Encrypt(password);
             //checks and makes sure that this is a user if not return user id number as -1
             bool check = false;
             //Get Users ID from password and Username
@@ -137,12 +141,15 @@ namespace qdsgames.com.Models
                 sec.ID = Convert.ToInt32(datareader2["ID"].ToString());
                 sec.Username = username;
                 sec.Password = password;
+               
             }
-            datareader2.Close();
 
+            datareader2.Close();
+           
             //Make sure the ID was found. If not found close connection
             if (sec.ID>0)
             {
+                user.Password = SecureEncrypt.Decrypt(sec.Password);
                 //Input new command
                 command = new SqlCommand(selectMethod2, connection);
                 //add parameters
@@ -160,7 +167,7 @@ namespace qdsgames.com.Models
                     user.Phone = datareader["PHONE"].ToString();
                     user.Address = datareader["ADDRESS"].ToString();
                     user.Usertype = Convert.ToInt32(datareader["USERTYPE"].ToString());
-                    user.Ban = Convert.ToBoolean(datareader["BAN"].ToString());
+                    user.Ban = Convert.ToBoolean(datareader["BAN"]);
                     user.Id = Convert.ToInt32(datareader["ID"].ToString()); //return the users id
                 }
                 datareader.Close();
@@ -243,8 +250,8 @@ namespace qdsgames.com.Models
             //user.Phone + ", " + user.Address + ", " + "0" + ", false;";
 
             //Checks if there is a user already if so return false
-            
-            int userCheck = UserDBAccess.GetUserID(sec.Username, sec.Password);
+            sec.Password = SecureEncrypt.Encrypt(sec.Password);
+            int userCheck = GetUserID(sec.Username, sec.Password);
             if (userCheck>=0) //find out if there is already a user with that username ad password
             {
                 return false;
@@ -309,7 +316,7 @@ namespace qdsgames.com.Models
 
             //Input command and connection
             SqlCommand command = new SqlCommand(selectMethod, connection);
-
+            
             //add parameters input
             command.Parameters.AddWithValue("name", u);
             command.Parameters.AddWithValue("password", password.ToString());
@@ -329,6 +336,7 @@ namespace qdsgames.com.Models
                 sec.Password = password;
             }
             datareader2.Close();
+            
             //For performance purposes close now
             connection.Close();
             if (check == false) //Check failed user either does not exsist or input wrong password.
@@ -340,6 +348,83 @@ namespace qdsgames.com.Models
             return sec.ID;
         }
 
+        [DataObjectMethod(DataObjectMethodType.Insert)]
+        internal void AddFriend(FUID friend)
+        {
+            String insert = "INSERT INTO FUID " +
+            " (FriendID, block, userID) " +
+            " Values (@fid, @block, @userID);";
+            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            {
+                using (SqlCommand cmd = new SqlCommand(insert, con))//Create User ID, username, and password
+                {
+                    cmd.Parameters.AddWithValue("fid", friend.FRIENDID);
+                    cmd.Parameters.AddWithValue("block", friend.BLOCK);
+                    cmd.Parameters.AddWithValue("userID", friend.USERID);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                
+            }
+            
+        }
+    
+        
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        public static List<UserSearch> SearchUsers(String name)
+        {
+            string selectMethod = "SELECT * FROM USERS "
+                + "WHERE name Like '%' + @Name + '%';";
+            List<UserSearch> list = new List<UserSearch>();
+            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            {
+                using (SqlCommand cmd = new SqlCommand(selectMethod, con))
+                {
+                    cmd.Parameters.AddWithValue("Name", name);
+                    UserSearch user;
+                    con.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        user = new UserSearch();
+                        user.Id = Convert.ToInt32(dr["ID"].ToString());
+                        user.username = dr["name"].ToString();
+                        list.Add(user);
+                    }
+                    dr.Close();
+
+                }
+            }
+                return list;
+        }
+        
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        public static List<UserSearch> GetAllUsers(int id)
+        {
+            string selectMethod = "SELECT ID, name FROM USERS where ID != @ID";
+            List<UserSearch> list = new List<UserSearch>();
+            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            {
+                using (SqlCommand cmd = new SqlCommand(selectMethod, con))
+                {
+                    con.Open();
+                    cmd.Parameters.AddWithValue("ID", id);
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    UserSearch userSearch;
+                    while(dr.Read())
+                    {
+                        userSearch = new UserSearch();
+                        userSearch.Id = Convert.ToInt32(dr["ID"].ToString());
+                        userSearch.username = dr["name"].ToString();
+                        list.Add(userSearch);
+                    }
+                    dr.Close();
+                }
+            }
+            return list;
+        }
         /// <summary>
         /// Obtains the user connection string for the database.
         /// </summary>

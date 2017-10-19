@@ -59,5 +59,10 @@ namespace qdsgames.com.Controllers
         {
             return Redirect("/User/AccountEdit");
         }
+
+        public ActionResult SearchUser()
+        {
+            return Redirect("/User/Index");
+        }
     }
 }

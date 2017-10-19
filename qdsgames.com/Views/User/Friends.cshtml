@@ -1,0 +1,35 @@
+﻿@model IEnumerable < List < qdsgames.com.Models.UserUtil.FriendInfo>>
+
+@{
+    ViewBag.Title = "Friends";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Friends</h2>
+
+<div>
+    <h4>Friends</h4>
+    <table name="userTable">
+        <tr class="row">
+            <th class="col-lg-4">Friend's Id</th>
+            <th class="col-lg-4">Username</th>
+            <th class="col-lg-4">Phone</th>
+        </tr>
+        
+        @foreach (var item in ViewBag.friends)
+        {
+
+            <tr class="row">
+                <td class="col-lg-4">
+                    @item.id
+                </td>
+                <td class="col-lg-4">
+                    @item.NAME
+                </td>
+                <td class="col-lg-4">
+                    @item.PHONE
+                </td>
+            </tr>
+        }
+    </table>
+</div>

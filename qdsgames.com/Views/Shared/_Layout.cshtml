@@ -18,6 +18,7 @@
                     type="text/javascript"></script>
     <script src="@Url.Content("~/Content/Scripts/bootstrap.min.js")"
                     type="text/javascript"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -36,9 +37,10 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
-
                 <ul class="nav navbar-nav pull-right">
+                    <li class="btn btn-group-lg">@Html.ActionLink("Search for Others", "Search", "User")</li>
 
+                    
                     @if (ViewData["Username"] == null)
                     {
                         <li>
@@ -51,20 +53,27 @@
                     }
                     else
                     {
-
                         <li>
-                            <!--Account Drop down-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-danger dropdown-toggle" style="width:100%;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li>Hello @ViewData["Username"]</li>
-                                    <li>@Html.ActionLink("Edit account", "AccountEdit", null, new { @class = "btn", @style = "width:auto;" })</li>
-                                    <li>
-                                        @Html.ActionLink("Logout", "Logout", null, new { @class = "btn", @style = "width:auto;" })
-                                    </li>
-                                </ul>
-                            </div>
+                            @using (@Html.BeginForm("GetUsersSearch", "User"))
+                            {
+                                
+                            };
                         </li>
+                            <li>
+                                <!--Account Drop down-->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger dropdown-toggle" style="width:100%;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li>Hello @ViewData["Username"]</li>
+                                        <li>@Html.ActionLink("Edit account", "AccountEdit", null, new { @class = "btn", @style = "width:auto;" })</li>
+                                        <li>@Html.ActionLink("See Friends", "Friends", "User",null,null)</li>
+                                        <li>
+                                            @Html.ActionLink("Logout", "Logout", null, new { @class = "btn", @style = "width:auto;" })
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
                     }
                 </ul>
             </div>
@@ -73,43 +82,44 @@
     <!--Start Login Modal -->
     <link href="~/Content/login.css" rel="stylesheet" />
     <div id="loginModal" class="modal">
-        @using (Html.BeginForm("Login", "User", new {ReturnUrl = ViewBag.ReturnUrl }
-        ,FormMethod.Post, new {
-            style = "background-color:rgba(59, 59, 169, 0.83);",
-            @class = "modal-content animate"
-        }))
+        @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }
+            , FormMethod.Post, new
+            {
+                style = "background-color:rgba(59, 59, 169, 0.83);",
+                @class = "modal-content animate"
+            }))
         {
 
-        <div class="imgcontainer">
-            <span onclick="document.getElementById('loginModal').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('loginModal').style.display='none'" class="close" title="Close Modal">&times;</span>
 
-            <img src="~/Pictures/avatar.png" alt="Avatar" class="avatar text-center" />
-            <br />
-        </div>
+                <img src="~/Pictures/avatar.png" alt="Avatar" class="avatar text-center" />
+                <br />
+            </div>
 
-        <div class="container">
+            <div class="container">
 
-            @Html.LabelFor(Model=> Model.Name)
-            @Html.TextBoxFor(model => model.Name)
-            @* @Html.Hidden("Username", Model.Name)*@
+                @Html.LabelFor(Model => Model.Name)
+                @Html.TextBoxFor(model => model.Name)
+                @* @Html.Hidden("Username", Model.Name)*@
 
-            <br />
+                <br />
 
-            @Html.LabelFor(Model=>Model.Password)
-            @Html.TextBoxFor(Model=>Model.Password)
-            @*@Html.Hidden("Password", Model.Password)*@
-            @*@Html.Hidden("ID", Model.ID = @ViewData["loginModal"])*@
-            <!--This returns the id of the users login-->
+                @Html.LabelFor(Model => Model.Password)
+                @Html.TextBoxFor(Model => Model.Password)
+                @*@Html.Hidden("Password", Model.Password)*@
+                @*@Html.Hidden("ID", Model.ID = @ViewData["loginModal"])*@
+                <!--This returns the id of the users login-->
 
-            <br />
-            <button type="submit" formmethod="post">Login</button>
-            <input type="checkbox" checked="checked"> Remember me
-        </div>
+                <br />
+                <button type="submit" formmethod="post">Login</button>
+                <input type="checkbox" checked="checked"> Remember me
+            </div>
 
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" onclick="document.getElementById('loginModal').style.display='none'" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
-        </div>
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('loginModal').style.display='none'" class="cancelbtn">Cancel</button>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
 
         }
     </div>
@@ -118,6 +128,7 @@
     <div id="signUpModal" class="modal" style="background-color:rgba(59, 59, 169, 0.83);">
 
         <link href="~/Content/signup.css" rel="stylesheet" />
+        <script src='https://www.google.com/recaptcha/api.js'></script>
         <span onclick="document.getElementById('signUpModal').style.display='none'" class="close" title="Close Modal">×</span>
         @using (Html.BeginForm("NewUser", "User", FormMethod.Post, new { @class = "modal-content animate" }))
         {
@@ -127,6 +138,7 @@
 
             <div class="page-header">
                 <h1>Create Account <small>Just fill this out and you'll be set!</small></h1>
+                <h2>@ViewBag.message</h2>
             </div>
             <div class="input-group">
                 <label><b>Username</b></label>
@@ -138,15 +150,15 @@
             </div>
             <div class="input-group">
                 <label><b>Phone</b></label>
-                <input type="tel" placeholder="Enter Phone" name="Phone" required>
+                <input type="tel" placeholder="Enter Phone" name="Phone">
             </div>
             <div class="input-group">
                 <label><b>Address</b></label>
-                <input type="text" placeholder="Enter Address" name="Address" required>
+                <input type="text" placeholder="Enter Address" name="Address">
             </div>
             <div class="input-group">
                 <label><b>Date of Birth</b></label>
-                <input type="date" class="dob" placeholder="Enter Birthday" name="DOB" required>
+                <input type="date" class="dob" placeholder="Enter Birthday" name="DOB">
             </div>
             <div class="input-group">
                 <label><b>Password</b></label>
@@ -160,12 +172,13 @@
                 <label><b>Remember Me</b></label>
                 @Html.EditorFor(Model => Model.Rememberme)
             </div>
+            <div class="g-recaptcha" data-sitekey="6LcH-TQUAAAAAHo16EQO0Eipy_62Fb-9vqGBkk60" data-callback="YourOnSubmitFn"></div>
+                <div class="clearfix">
+                    <button type="button" onclick="document.getElementById('signUpModal').style.display='none'" class="cancelbtn">Cancel</button>
+                    <button type="submit" class="signupbtn" formmethod="post">Register</button>
+                </div>
 
-            <div class="clearfix">
-                <button type="button" onclick="document.getElementById('signUpModal').style.display='none'" class="cancelbtn">Cancel</button>
-                <button type="submit" class="signupbtn" formmethod="post">Register</button>
             </div>
-        </div>
         }
     </div>
     <!--Login Javascript-->
@@ -210,8 +223,8 @@
             alert("Log in not successfull");
             return;
         }
-
     </script>
+
     <div class="container body-content">
         @RenderBody()
     </div>
@@ -219,6 +232,8 @@
         <div class="panel-footer">
             <p>&copy; 2017-@DateTime.Now.Year - QDSGames</p>
         </div>
+        <span id="siteseal">
+        <script async type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=KdUQBaX6IUUz2GDWDaV85R9aNyOPe8ZRwWhePVt4zSOPdz3FwolhlWKbAbdG"></script></span>
     </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
