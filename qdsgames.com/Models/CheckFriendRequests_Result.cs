@@ -11,9 +11,9 @@ namespace qdsgames.com.Models
 {
     using System;
     
-    public partial class GetUserSearchAll_Result
+    public partial class CheckFriendRequests_Result
     {
-        public int id { get; set; }
-        public string name { get; set; }
+        public int FRIENDID { get; set; }
+        public string NAME { get; set; }
     }
 }

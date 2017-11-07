@@ -17,9 +17,8 @@ namespace qdsgames.com.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public USER()
         {
-            this.FOLLOWs = new HashSet<FOLLOW>();
-            this.FOLLOWs1 = new HashSet<FOLLOW>();
             this.FUIDs = new HashSet<FUID>();
+            this.FUIDs1 = new HashSet<FUID>();
             this.UCLTs = new HashSet<UCLT>();
         }
     
@@ -39,12 +38,9 @@ namespace qdsgames.com.Models
         public Nullable<System.DateTime> LASTONDATE { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FOLLOW> FOLLOWs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FOLLOW> FOLLOWs1 { get; set; }
-        public virtual FUID FUID { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FUID> FUIDs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FUID> FUIDs1 { get; set; }
         public virtual LVIDEO LVIDEO { get; set; }
         public virtual SECURITY SECURITY { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

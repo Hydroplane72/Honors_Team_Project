@@ -19,7 +19,7 @@ namespace qdsgames.com.Models
         public int MLSID { get; set; }
         public string URL { get; set; }
     
-        public virtual USER USER { get; set; }
         public virtual MSLID MSLID { get; set; }
+        public virtual USER USER { get; set; }
     }
 }

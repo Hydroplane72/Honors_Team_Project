@@ -15,10 +15,10 @@ namespace qdsgames.com.Models
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class UsersDatabaseEntities_QDSGames : DbContext
+    public partial class UsersDataEntities : DbContext
     {
-        public UsersDatabaseEntities_QDSGames()
-            : base("name=UsersDatabaseEntities_QDSGames")
+        public UsersDataEntities()
+            : base("name=UsersDataEntities")
         {
         }
     
@@ -30,14 +30,136 @@ namespace qdsgames.com.Models
         public virtual DbSet<FOLLOW> FOLLOWs { get; set; }
         public virtual DbSet<FUID> FUIDs { get; set; }
         public virtual DbSet<LVIDEO> LVIDEOs { get; set; }
+        public virtual DbSet<MSLID> MSLIDs { get; set; }
         public virtual DbSet<SECURITY> SECURITies { get; set; }
         public virtual DbSet<UCLT> UCLTs { get; set; }
         public virtual DbSet<USER> USERS { get; set; }
-        public virtual DbSet<MSLID> MSLIDs { get; set; }
     
-        public virtual ObjectResult<GetUserSearchAll_Result> GetUserSearchAll()
+        [DbFunction("UsersDataEntities", "CheckFriendRequests")]
+        public virtual IQueryable<CheckFriendRequests_Result> CheckFriendRequests(Nullable<int> userID)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetUserSearchAll_Result>("GetUserSearchAll");
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<CheckFriendRequests_Result>("[UsersDataEntities].[CheckFriendRequests](@userID)", userIDParameter);
+        }
+    
+        [DbFunction("UsersDataEntities", "Function")]
+        public virtual IQueryable<Function_Result> Function(Nullable<int> param1, string param2)
+        {
+            var param1Parameter = param1.HasValue ?
+                new ObjectParameter("param1", param1) :
+                new ObjectParameter("param1", typeof(int));
+    
+            var param2Parameter = param2 != null ?
+                new ObjectParameter("param2", param2) :
+                new ObjectParameter("param2", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Function_Result>("[UsersDataEntities].[Function](@param1, @param2)", param1Parameter, param2Parameter);
+        }
+    
+        [DbFunction("UsersDataEntities", "GetMSLIDCount")]
+        public virtual IQueryable<GetMSLIDCount_Result> GetMSLIDCount()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetMSLIDCount_Result>("[UsersDataEntities].[GetMSLIDCount]()");
+        }
+    
+        [DbFunction("UsersDataEntities", "GetMSLIDName")]
+        public virtual IQueryable<GetMSLIDName_Result> GetMSLIDName(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetMSLIDName_Result>("[UsersDataEntities].[GetMSLIDName](@id)", idParameter);
+        }
+    
+        [DbFunction("UsersDataEntities", "GetUserFriends")]
+        public virtual IQueryable<GetUserFriends_Result> GetUserFriends(Nullable<int> userIDs)
+        {
+            var userIDsParameter = userIDs.HasValue ?
+                new ObjectParameter("userIDs", userIDs) :
+                new ObjectParameter("userIDs", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetUserFriends_Result>("[UsersDataEntities].[GetUserFriends](@userIDs)", userIDsParameter);
+        }
+    
+        [DbFunction("UsersDataEntities", "GetUserLinks")]
+        public virtual IQueryable<GetUserLinks_Result> GetUserLinks(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetUserLinks_Result>("[UsersDataEntities].[GetUserLinks](@UserId)", userIdParameter);
+        }
+    
+        [DbFunction("UsersDataEntities", "GetUserRequesterFunction")]
+        public virtual IQueryable<GetUserRequesterFunction_Result> GetUserRequesterFunction(Nullable<int> friendID, Nullable<int> userID)
+        {
+            var friendIDParameter = friendID.HasValue ?
+                new ObjectParameter("FriendID", friendID) :
+                new ObjectParameter("FriendID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetUserRequesterFunction_Result>("[UsersDataEntities].[GetUserRequesterFunction](@FriendID, @UserID)", friendIDParameter, userIDParameter);
+        }
+    
+        [DbFunction("UsersDataEntities", "GetUserSocialLinks")]
+        public virtual IQueryable<GetUserSocialLinks_Result> GetUserSocialLinks(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetUserSocialLinks_Result>("[UsersDataEntities].[GetUserSocialLinks](@userID)", userIDParameter);
+        }
+    
+        public virtual int AcceptFriendProc(Nullable<int> friendId, Nullable<int> userID)
+        {
+            var friendIdParameter = friendId.HasValue ?
+                new ObjectParameter("FriendId", friendId) :
+                new ObjectParameter("FriendId", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AcceptFriendProc", friendIdParameter, userIDParameter);
+        }
+    
+        public virtual int AddNewFriend(Nullable<int> friendIDIN, Nullable<bool> blockIN, Nullable<int> userIDIn)
+        {
+            var friendIDINParameter = friendIDIN.HasValue ?
+                new ObjectParameter("FriendIDIN", friendIDIN) :
+                new ObjectParameter("FriendIDIN", typeof(int));
+    
+            var blockINParameter = blockIN.HasValue ?
+                new ObjectParameter("BlockIN", blockIN) :
+                new ObjectParameter("BlockIN", typeof(bool));
+    
+            var userIDInParameter = userIDIn.HasValue ?
+                new ObjectParameter("UserIDIn", userIDIn) :
+                new ObjectParameter("UserIDIn", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddNewFriend", friendIDINParameter, blockINParameter, userIDInParameter);
+        }
+    
+        public virtual int DenyFriendProc(Nullable<int> friendID, Nullable<int> userID)
+        {
+            var friendIDParameter = friendID.HasValue ?
+                new ObjectParameter("FriendID", friendID) :
+                new ObjectParameter("FriendID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DenyFriendProc", friendIDParameter, userIDParameter);
         }
     
         public virtual ObjectResult<GetAllUsers_Result> GetAllUsers(Nullable<int> iDIn)
@@ -49,22 +171,13 @@ namespace qdsgames.com.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllUsers_Result>("GetAllUsers", iDInParameter);
         }
     
-        public virtual ObjectResult<SearchUser_Result> SearchUser(string username)
-        {
-            var usernameParameter = username != null ?
-                new ObjectParameter("username", username) :
-                new ObjectParameter("username", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchUser_Result>("SearchUser", usernameParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<int>> GetFriends(Nullable<int> userIDs)
+        public virtual ObjectResult<GetFriends_Result> GetFriends(Nullable<int> userIDs)
         {
             var userIDsParameter = userIDs.HasValue ?
                 new ObjectParameter("userIDs", userIDs) :
                 new ObjectParameter("userIDs", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetFriends", userIDsParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetFriends_Result>("GetFriends", userIDsParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> GetUserID(string username)
@@ -76,14 +189,30 @@ namespace qdsgames.com.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetUserID", usernameParameter);
         }
     
-        [DbFunction("UsersDatabaseEntities_QDSGames", "GetUserFriends")]
-        public virtual IQueryable<GetUserFriends_Result> GetUserFriends(Nullable<int> userIDs)
+        public virtual ObjectResult<SearchUser_Result> SearchUser(string username)
         {
-            var userIDsParameter = userIDs.HasValue ?
-                new ObjectParameter("userIDs", userIDs) :
-                new ObjectParameter("userIDs", typeof(int));
+            var usernameParameter = username != null ?
+                new ObjectParameter("username", username) :
+                new ObjectParameter("username", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetUserFriends_Result>("[UsersDatabaseEntities_QDSGames].[GetUserFriends](@userIDs)", userIDsParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchUser_Result>("SearchUser", usernameParameter);
+        }
+    
+        public virtual int UpdateCreateUCLTProc(Nullable<int> userID, Nullable<int> mslid, string url)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var mslidParameter = mslid.HasValue ?
+                new ObjectParameter("Mslid", mslid) :
+                new ObjectParameter("Mslid", typeof(int));
+    
+            var urlParameter = url != null ?
+                new ObjectParameter("Url", url) :
+                new ObjectParameter("Url", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateCreateUCLTProc", userIDParameter, mslidParameter, urlParameter);
         }
     }
 }

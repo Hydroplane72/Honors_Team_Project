@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="UsersDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="UsersDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="FOLLOW">
           <Key>
             <PropertyRef Name="FOLLOWID" />
@@ -27,6 +27,8 @@
           <Property Name="FRIENDID" Type="int" Nullable="false" />
           <Property Name="BLOCK" Type="bit" Nullable="false" />
           <Property Name="USERID" Type="int" Nullable="false" />
+          <Property Name="Confirmed" Type="int" Nullable="false" />
+          <Property Name="Request" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="LVIDEO">
           <Key>
@@ -43,10 +45,9 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NAME" Type="varchar" MaxLength="20" />
           <Property Name="LINK" Type="varchar" MaxLength="50" />
-          <Property Name="LOGOPIC" Type="image" />
         </EntityType>
         <EntityType Name="SECURITY">
           <Key>
@@ -54,7 +55,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="UCLT">
           <Key>
@@ -75,7 +76,7 @@
           <Property Name="EMAIL" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SecurityQuestion" Type="varchar" MaxLength="120" />
           <Property Name="SecurityAnswer" Type="varchar" MaxLength="50" />
-          <Property Name="PHONE" Type="varchar" MaxLength="17" Nullable="false" />
+          <Property Name="PHONE" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="ADDRESS" Type="nvarchar" MaxLength="70" Nullable="false" />
           <Property Name="STATE/PROVINCE" Type="varchar" MaxLength="2" />
           <Property Name="COUNTRY" Type="varchar" MaxLength="50" />
@@ -84,35 +85,11 @@
           <Property Name="CREATEDATE" Type="datetime2" Precision="7" />
           <Property Name="LASTONDATE" Type="datetime2" Precision="7" />
         </EntityType>
-        <Association Name="FK_FOLLOWfriendid_USERid">
-          <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
-          <End Role="FOLLOW" Type="Self.FOLLOW" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USERS">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FOLLOW">
-              <PropertyRef Name="FRIENDID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FOLLOWuserid_USERid">
-          <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
-          <End Role="FOLLOW" Type="Self.FOLLOW" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USERS">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FOLLOW">
-              <PropertyRef Name="USERID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_FUIDFriendID_USERid">
-          <End Role="SECURITY" Type="Self.SECURITY" Multiplicity="1" />
+          <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
           <End Role="FUID" Type="Self.FUID" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="SECURITY">
+            <Principal Role="USERS">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="FUID">
@@ -121,10 +98,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FUIDuserid_USERid">
-          <End Role="SECURITY" Type="Self.SECURITY" Multiplicity="1" />
+          <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
           <End Role="FUID" Type="Self.FUID" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="SECURITY">
+            <Principal Role="USERS">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="FUID">
@@ -180,11 +157,67 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="AcceptFriendProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FriendId" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AddNewFriend" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FriendIDIN" Type="int" Mode="In" />
+          <Parameter Name="BlockIN" Type="bit" Mode="In" />
+          <Parameter Name="UserIDIn" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CheckFriendRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="FRIENDID" Type="int" Nullable="false" />
+                <Property Name="NAME" Type="varchar" MaxLength="50" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="CountMSLID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="DenyFriendProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FriendID" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Function" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="param1" Type="int" Mode="In" />
+          <Parameter Name="param2" Type="char" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="c1" Type="int" />
+                <Property Name="c2" Type="char" MaxLength="5" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="GetAllUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IDIn" Type="int" Mode="In" />
         </Function>
         <Function Name="GetFriends" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userIDs" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetMSLIDCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="num" Type="int" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetMSLIDName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="c1" Type="varchar" MaxLength="20" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
         </Function>
         <Function Name="GetUserFriends" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userIDs" Type="int" Mode="In" />
@@ -192,8 +225,10 @@
             <CollectionType>
               <RowType>
                 <Property Name="NAME" Type="varchar" MaxLength="50" Nullable="false" />
-                <Property Name="id" Type="int" Nullable="false" />
-                <Property Name="PHONE" Type="varchar" MaxLength="17" />
+                <Property Name="ID" Type="int" Nullable="false" />
+                <Property Name="PHONE" Type="varchar" MaxLength="20" Nullable="false" />
+                <Property Name="Confirmed" Type="int" />
+                <Property Name="Request" Type="int" />
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -201,10 +236,58 @@
         <Function Name="GetUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="username" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="GetUserLinks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="name" Type="varchar" MaxLength="20" />
+                <Property Name="link" Type="varchar" MaxLength="50" />
+                <Property Name="UserID" Type="int" />
+                <Property Name="mslid" Type="int" />
+                <Property Name="userUrl" Type="varchar" MaxLength="120" />
+                <Property Name="id" Type="int" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetUserRequester" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="FriendID" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetUserRequesterFunction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FriendID" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Request" Type="int" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetUserSocialLinks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="pictureUrl" Type="varchar" MaxLength="50" />
+                <Property Name="pictureName" Type="varchar" MaxLength="20" />
+                <Property Name="userUrl" Type="varchar" MaxLength="120" />
+                <Property Name="id" Type="int" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="SearchUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="username" Type="varchar" Mode="In" />
         </Function>
-        <EntityContainer Name="UsersDatabaseModelStoreContainer">
+        <Function Name="UpdateCreateUCLTProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="Mslid" Type="int" Mode="In" />
+          <Parameter Name="Url" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="UsersDataModelStoreContainer">
           <EntitySet Name="FOLLOW" EntityType="Self.FOLLOW" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FUID" EntityType="Self.FUID" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LVIDEO" EntityType="Self.LVIDEO" Schema="dbo" store:Type="Tables" />
@@ -212,20 +295,12 @@
           <EntitySet Name="SECURITY" EntityType="Self.SECURITY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UCLT" EntityType="Self.UCLT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USERS" EntityType="Self.USERS" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_FOLLOWfriendid_USERid" Association="Self.FK_FOLLOWfriendid_USERid">
-            <End Role="USERS" EntitySet="USERS" />
-            <End Role="FOLLOW" EntitySet="FOLLOW" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FOLLOWuserid_USERid" Association="Self.FK_FOLLOWuserid_USERid">
-            <End Role="USERS" EntitySet="USERS" />
-            <End Role="FOLLOW" EntitySet="FOLLOW" />
-          </AssociationSet>
           <AssociationSet Name="FK_FUIDFriendID_USERid" Association="Self.FK_FUIDFriendID_USERid">
-            <End Role="SECURITY" EntitySet="SECURITY" />
+            <End Role="USERS" EntitySet="USERS" />
             <End Role="FUID" EntitySet="FUID" />
           </AssociationSet>
           <AssociationSet Name="FK_FUIDuserid_USERid" Association="Self.FK_FUIDuserid_USERid">
-            <End Role="SECURITY" EntitySet="SECURITY" />
+            <End Role="USERS" EntitySet="USERS" />
             <End Role="FUID" EntitySet="FUID" />
           </AssociationSet>
           <AssociationSet Name="FK_LVIDEOid_USERid" Association="Self.FK_LVIDEOid_USERid">
@@ -245,10 +320,49 @@
             <End Role="USERS" EntitySet="USERS" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="UsersDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="UsersDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="CheckFriendRequests_Result">
+          <Property Name="FRIENDID" Type="Int32" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </ComplexType>
+        <ComplexType Name="Function_Result">
+          <Property Name="c1" Type="Int32" />
+          <Property Name="c2" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+        </ComplexType>
+        <ComplexType Name="GetMSLIDCount_Result">
+          <Property Name="num" Type="Int32" />
+        </ComplexType>
+        <ComplexType Name="GetMSLIDName_Result">
+          <Property Name="c1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </ComplexType>
+        <ComplexType Name="GetUserFriends_Result">
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Confirmed" Type="Int32" />
+          <Property Name="Request" Type="Int32" />
+        </ComplexType>
+        <ComplexType Name="GetUserLinks_Result">
+          <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="link" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="mslid" Type="Int32" />
+          <Property Name="userUrl" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" />
+        </ComplexType>
+        <ComplexType Name="GetUserRequesterFunction_Result">
+          <Property Name="Request" Type="Int32" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetUserSocialLinks_Result">
+          <Property Name="pictureUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pictureName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="userUrl" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" />
+        </ComplexType>
         <EntityType Name="FOLLOW">
           <Key>
             <PropertyRef Name="FOLLOWID" />
@@ -262,8 +376,6 @@
           <Property Name="SFB4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SFB5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SFB6" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="USER" Relationship="Self.FK_FOLLOWfriendid_USERid" FromRole="FOLLOW" ToRole="USERS" />
-          <NavigationProperty Name="USER1" Relationship="Self.FK_FOLLOWuserid_USERid" FromRole="FOLLOW" ToRole="USERS" />
         </EntityType>
         <EntityType Name="FUID">
           <Key>
@@ -273,10 +385,10 @@
           <Property Name="FRIENDID" Type="Int32" Nullable="false" />
           <Property Name="BLOCK" Type="Boolean" Nullable="false" />
           <Property Name="USERID" Type="Int32" Nullable="false" />
+          <Property Name="Confirmed" Type="Int32" Nullable="false" />
+          <Property Name="Request" Type="Int32" Nullable="false" />
           <NavigationProperty Name="USER" Relationship="Self.FK_FUIDFriendID_USERid" FromRole="FUID" ToRole="USERS" />
           <NavigationProperty Name="USER1" Relationship="Self.FK_FUIDuserid_USERid" FromRole="FUID" ToRole="USERS" />
-          <NavigationProperty Name="SECURITY" Relationship="UsersDatabaseModel.FK_FUIDFriendID_USERid1" FromRole="FUID" ToRole="SECURITY" />
-          <NavigationProperty Name="SECURITY1" Relationship="UsersDatabaseModel.FK_FUIDuserid_USERid1" FromRole="FUID" ToRole="SECURITY" />
         </EntityType>
         <EntityType Name="LVIDEO">
           <Key>
@@ -290,16 +402,23 @@
           <Property Name="V6" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="USER" Relationship="Self.FK_LVIDEOid_USERid" FromRole="LVIDEO" ToRole="USERS" />
         </EntityType>
+        <EntityType Name="MSLID">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LINK" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UCLTs" Relationship="Self.FK_UCLTmls_MLSid" FromRole="MSLID" ToRole="UCLT" />
+        </EntityType>
         <EntityType Name="SECURITY">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="USER" Relationship="Self.FK_USERID_SECURITYID" FromRole="SECURITY" ToRole="USERS" />
-          <NavigationProperty Name="FUIDs" Relationship="UsersDatabaseModel.FK_FUIDFriendID_USERid1" FromRole="SECURITY" ToRole="FUID" />
-          <NavigationProperty Name="FUIDs1" Relationship="UsersDatabaseModel.FK_FUIDuserid_USERid1" FromRole="SECURITY" ToRole="FUID" />
         </EntityType>
         <EntityType Name="UCLT">
           <Key>
@@ -309,8 +428,8 @@
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="MLSID" Type="Int32" Nullable="false" />
           <Property Name="URL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MSLID" Relationship="Self.FK_UCLTmls_MLSid" FromRole="UCLT" ToRole="MSLID" />
           <NavigationProperty Name="USER" Relationship="Self.FK_UCLTuser_USERSid" FromRole="UCLT" ToRole="USERS" />
-          <NavigationProperty Name="MSLID" Relationship="UsersDatabaseModel.FK_UCLTmls_MLSid" FromRole="UCLT" ToRole="MSLID" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -322,7 +441,7 @@
           <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="SecurityQuestion" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
           <Property Name="SecurityAnswer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PHONE" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ADDRESS" Type="String" MaxLength="70" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="STATE_PROVINCE" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="COUNTRY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -330,47 +449,21 @@
           <Property Name="BAN" Type="Boolean" />
           <Property Name="CREATEDATE" Type="DateTime" Precision="7" />
           <Property Name="LASTONDATE" Type="DateTime" Precision="7" />
-          <NavigationProperty Name="FOLLOWs" Relationship="Self.FK_FOLLOWfriendid_USERid" FromRole="USERS" ToRole="FOLLOW" />
-          <NavigationProperty Name="FOLLOWs1" Relationship="Self.FK_FOLLOWuserid_USERid" FromRole="USERS" ToRole="FOLLOW" />
-          <NavigationProperty Name="FUID" Relationship="Self.FK_FUIDFriendID_USERid" FromRole="USERS" ToRole="FUID" />
-          <NavigationProperty Name="FUIDs" Relationship="Self.FK_FUIDuserid_USERid" FromRole="USERS" ToRole="FUID" />
+          <NavigationProperty Name="FUIDs" Relationship="Self.FK_FUIDFriendID_USERid" FromRole="USERS" ToRole="FUID" />
+          <NavigationProperty Name="FUIDs1" Relationship="Self.FK_FUIDuserid_USERid" FromRole="USERS" ToRole="FUID" />
           <NavigationProperty Name="LVIDEO" Relationship="Self.FK_LVIDEOid_USERid" FromRole="USERS" ToRole="LVIDEO" />
           <NavigationProperty Name="SECURITY" Relationship="Self.FK_USERID_SECURITYID" FromRole="USERS" ToRole="SECURITY" />
           <NavigationProperty Name="UCLTs" Relationship="Self.FK_UCLTuser_USERSid" FromRole="USERS" ToRole="UCLT" />
         </EntityType>
-        <Association Name="FK_FOLLOWfriendid_USERid">
-          <End Role="USERS" Type="Self.USER" Multiplicity="1" />
-          <End Role="FOLLOW" Type="Self.FOLLOW" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USERS">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FOLLOW">
-              <PropertyRef Name="FRIENDID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FOLLOWuserid_USERid">
-          <End Role="USERS" Type="Self.USER" Multiplicity="1" />
-          <End Role="FOLLOW" Type="Self.FOLLOW" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USERS">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FOLLOW">
-              <PropertyRef Name="USERID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_FUIDFriendID_USERid">
           <End Role="USERS" Type="Self.USER" Multiplicity="1" />
-          <End Role="FUID" Type="Self.FUID" Multiplicity="0..1" />
+          <End Role="FUID" Type="Self.FUID" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USERS">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="FUID">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="FRIENDID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -398,6 +491,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UCLTmls_MLSid">
+          <End Role="MSLID" Type="Self.MSLID" Multiplicity="1" />
+          <End Role="UCLT" Type="Self.UCLT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSLID">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UCLT">
+              <PropertyRef Name="MLSID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_USERID_SECURITYID">
           <End Role="SECURITY" Type="Self.SECURITY" Multiplicity="1" />
           <End Role="USERS" Type="Self.USER" Multiplicity="0..1" />
@@ -422,21 +527,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="UsersDatabaseEntities_QDSGames" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="UsersDataEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="FOLLOWs" EntityType="Self.FOLLOW" />
           <EntitySet Name="FUIDs" EntityType="Self.FUID" />
           <EntitySet Name="LVIDEOs" EntityType="Self.LVIDEO" />
+          <EntitySet Name="MSLIDs" EntityType="Self.MSLID" />
           <EntitySet Name="SECURITies" EntityType="Self.SECURITY" />
           <EntitySet Name="UCLTs" EntityType="Self.UCLT" />
           <EntitySet Name="USERS" EntityType="Self.USER" />
-          <AssociationSet Name="FK_FOLLOWfriendid_USERid" Association="Self.FK_FOLLOWfriendid_USERid">
-            <End Role="USERS" EntitySet="USERS" />
-            <End Role="FOLLOW" EntitySet="FOLLOWs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FOLLOWuserid_USERid" Association="Self.FK_FOLLOWuserid_USERid">
-            <End Role="USERS" EntitySet="USERS" />
-            <End Role="FOLLOW" EntitySet="FOLLOWs" />
-          </AssociationSet>
           <AssociationSet Name="FK_FUIDFriendID_USERid" Association="Self.FK_FUIDFriendID_USERid">
             <End Role="USERS" EntitySet="USERS" />
             <End Role="FUID" EntitySet="FUIDs" />
@@ -449,6 +547,10 @@
             <End Role="USERS" EntitySet="USERS" />
             <End Role="LVIDEO" EntitySet="LVIDEOs" />
           </AssociationSet>
+          <AssociationSet Name="FK_UCLTmls_MLSid" Association="Self.FK_UCLTmls_MLSid">
+            <End Role="MSLID" EntitySet="MSLIDs" />
+            <End Role="UCLT" EntitySet="UCLTs" />
+          </AssociationSet>
           <AssociationSet Name="FK_USERID_SECURITYID" Association="Self.FK_USERID_SECURITYID">
             <End Role="SECURITY" EntitySet="SECURITies" />
             <End Role="USERS" EntitySet="USERS" />
@@ -457,107 +559,82 @@
             <End Role="USERS" EntitySet="USERS" />
             <End Role="UCLT" EntitySet="UCLTs" />
           </AssociationSet>
-          <FunctionImport Name="GetUserSearchAll" ReturnType="Collection(UsersDatabaseModel.GetUserSearchAll_Result)" />
-          <EntitySet Name="MSLIDs" EntityType="UsersDatabaseModel.MSLID" />
-          <AssociationSet Name="FK_UCLTmls_MLSid" Association="UsersDatabaseModel.FK_UCLTmls_MLSid">
-            <End Role="MSLID" EntitySet="MSLIDs" />
-            <End Role="UCLT" EntitySet="UCLTs" />
-          </AssociationSet>
-          <FunctionImport Name="GetAllUsers" ReturnType="Collection(UsersDatabaseModel.GetAllUsers_Result)">
-          <Parameter Name="IDIn" Mode="In" Type="Int32" />
+          <FunctionImport Name="CheckFriendRequests" IsComposable="true" ReturnType="Collection(UsersDataModel.CheckFriendRequests_Result)">
+            <Parameter Name="userID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SearchUser" ReturnType="Collection(UsersDatabaseModel.SearchUser_Result)">
-          <Parameter Name="username" Mode="In" Type="String" />
+          <FunctionImport Name="Function" IsComposable="true" ReturnType="Collection(UsersDataModel.Function_Result)">
+            <Parameter Name="param1" Mode="In" Type="Int32" />
+            <Parameter Name="param2" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetFriends" ReturnType="Collection(Int32)">
-          <Parameter Name="userIDs" Mode="In" Type="Int32" />
+          <FunctionImport Name="GetMSLIDCount" IsComposable="true" ReturnType="Collection(UsersDataModel.GetMSLIDCount_Result)" />
+          <FunctionImport Name="GetMSLIDName" IsComposable="true" ReturnType="Collection(UsersDataModel.GetMSLIDName_Result)">
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <AssociationSet Name="FK_FUIDFriendID_USERid1" Association="UsersDatabaseModel.FK_FUIDFriendID_USERid1">
-            <End Role="SECURITY" EntitySet="SECURITies" />
-            <End Role="FUID" EntitySet="FUIDs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FUIDuserid_USERid1" Association="UsersDatabaseModel.FK_FUIDuserid_USERid1">
-            <End Role="SECURITY" EntitySet="SECURITies" />
-            <End Role="FUID" EntitySet="FUIDs" />
-          </AssociationSet>
+          <FunctionImport Name="GetUserFriends" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserFriends_Result)">
+            <Parameter Name="userIDs" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetUserLinks" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserLinks_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetUserRequesterFunction" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserRequesterFunction_Result)">
+            <Parameter Name="FriendID" Mode="In" Type="Int32" />
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetUserSocialLinks" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserSocialLinks_Result)">
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AcceptFriendProc">
+            <Parameter Name="FriendId" Mode="In" Type="Int32" />
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AddNewFriend">
+            <Parameter Name="FriendIDIN" Mode="In" Type="Int32" />
+            <Parameter Name="BlockIN" Mode="In" Type="Boolean" />
+            <Parameter Name="UserIDIn" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DenyFriendProc">
+            <Parameter Name="FriendID" Mode="In" Type="Int32" />
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllUsers" ReturnType="Collection(UsersDataModel.GetAllUsers_Result)">
+            <Parameter Name="IDIn" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetFriends" ReturnType="Collection(UsersDataModel.GetFriends_Result)">
+            <Parameter Name="userIDs" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="GetUserID" ReturnType="Collection(Int32)">
-          <Parameter Name="username" Mode="In" Type="String" />
+            <Parameter Name="username" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetUserFriends" IsComposable="true" ReturnType="Collection(UsersDatabaseModel.GetUserFriends_Result)">
-          <Parameter Name="userIDs" Mode="In" Type="Int32" />
+          <FunctionImport Name="SearchUser" ReturnType="Collection(UsersDataModel.SearchUser_Result)">
+            <Parameter Name="username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateCreateUCLTProc">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="Mslid" Mode="In" Type="Int32" />
+            <Parameter Name="Url" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
-        <ComplexType Name="GetUserSearchAll_Result">
-          <Property Type="Int32" Name="id" Nullable="false" />
-          <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
-        </ComplexType>
-        <EntityType Name="MSLID">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LINK" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LOGOPIC" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="UCLTs" Relationship="UsersDatabaseModel.FK_UCLTmls_MLSid" FromRole="MSLID" ToRole="UCLT" />
-        </EntityType>
-        <Association Name="FK_UCLTmls_MLSid">
-          <End Type="UsersDatabaseModel.MSLID" Role="MSLID" Multiplicity="1" />
-          <End Type="UsersDatabaseModel.UCLT" Role="UCLT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MSLID">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="UCLT">
-              <PropertyRef Name="MLSID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="GetAllUsers_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
         </ComplexType>
+        <ComplexType Name="GetFriends_Result">
+          <Property Type="String" Name="NAME" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="PHONE" Nullable="false" MaxLength="20" />
+        </ComplexType>
         <ComplexType Name="SearchUser_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
-        </ComplexType>
-        <Association Name="FK_FUIDFriendID_USERid1">
-          <End Type="UsersDatabaseModel.SECURITY" Role="SECURITY" Multiplicity="1" />
-          <End Type="UsersDatabaseModel.FUID" Role="FUID" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SECURITY">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FUID">
-              <PropertyRef Name="FRIENDID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FUIDuserid_USERid1">
-          <End Type="UsersDatabaseModel.SECURITY" Role="SECURITY" Multiplicity="1" />
-          <End Type="UsersDatabaseModel.FUID" Role="FUID" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SECURITY">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FUID">
-              <PropertyRef Name="USERID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <ComplexType Name="GetUserFriends_Result">
-          <Property Type="String" Name="NAME" Nullable="false" MaxLength="50" />
-          <Property Type="Int32" Name="id" Nullable="false" />
-          <Property Type="String" Name="PHONE" Nullable="true" MaxLength="17" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="UsersDatabaseModelStoreContainer" CdmEntityContainer="UsersDatabaseEntities_QDSGames">
+        <EntityContainerMapping StorageEntityContainer="UsersDataModelStoreContainer" CdmEntityContainer="UsersDataEntities">
           <EntitySetMapping Name="FOLLOWs">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.FOLLOW">
+            <EntityTypeMapping TypeName="UsersDataModel.FOLLOW">
               <MappingFragment StoreEntitySet="FOLLOW">
                 <ScalarProperty Name="FOLLOWID" ColumnName="FOLLOWID" />
                 <ScalarProperty Name="USERID" ColumnName="USERID" />
@@ -572,17 +649,19 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FUIDs">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.FUID">
+            <EntityTypeMapping TypeName="UsersDataModel.FUID">
               <MappingFragment StoreEntitySet="FUID">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="FRIENDID" ColumnName="FRIENDID" />
                 <ScalarProperty Name="BLOCK" ColumnName="BLOCK" />
                 <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="Confirmed" ColumnName="Confirmed" />
+                <ScalarProperty Name="Request" ColumnName="Request" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LVIDEOs">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.LVIDEO">
+            <EntityTypeMapping TypeName="UsersDataModel.LVIDEO">
               <MappingFragment StoreEntitySet="LVIDEO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="V1" ColumnName="V1" />
@@ -593,8 +672,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSLIDs">
+            <EntityTypeMapping TypeName="UsersDataModel.MSLID">
+              <MappingFragment StoreEntitySet="MSLID">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="LINK" ColumnName="LINK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="SECURITies">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.SECURITY">
+            <EntityTypeMapping TypeName="UsersDataModel.SECURITY">
               <MappingFragment StoreEntitySet="SECURITY">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -603,7 +691,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UCLTs">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.UCLT">
+            <EntityTypeMapping TypeName="UsersDataModel.UCLT">
               <MappingFragment StoreEntitySet="UCLT">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -613,7 +701,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="USERS">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.USER">
+            <EntityTypeMapping TypeName="UsersDataModel.USER">
               <MappingFragment StoreEntitySet="USERS">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -632,43 +720,106 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="MSLIDs">
-            <EntityTypeMapping TypeName="UsersDatabaseModel.MSLID">
-              <MappingFragment StoreEntitySet="MSLID">
-                <ScalarProperty Name="LOGOPIC" ColumnName="LOGOPIC" />
-                <ScalarProperty Name="LINK" ColumnName="LINK" />
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.CheckFriendRequests" FunctionImportName="CheckFriendRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.CheckFriendRequests_Result">
+                <ScalarProperty Name="FRIENDID" ColumnName="FRIENDID" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.Function" FunctionImportName="Function">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.Function_Result">
+                <ScalarProperty Name="c1" ColumnName="c1" />
+                <ScalarProperty Name="c2" ColumnName="c2" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetMSLIDCount" FunctionImportName="GetMSLIDCount">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetMSLIDCount_Result">
+                <ScalarProperty Name="num" ColumnName="num" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetMSLIDName" FunctionImportName="GetMSLIDName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetMSLIDName_Result">
+                <ScalarProperty Name="c1" ColumnName="c1" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetUserFriends" FunctionImportName="GetUserFriends">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetUserFriends_Result">
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetAllUsers" FunctionName="UsersDatabaseModel.Store.GetAllUsers">
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="Confirmed" ColumnName="Confirmed" />
+                <ScalarProperty Name="Request" ColumnName="Request" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetUserLinks" FunctionImportName="GetUserLinks">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="UsersDatabaseModel.GetAllUsers_Result">
+              <ComplexTypeMapping TypeName="UsersDataModel.GetUserLinks_Result">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="link" ColumnName="link" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="mslid" ColumnName="mslid" />
+                <ScalarProperty Name="userUrl" ColumnName="userUrl" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetUserRequesterFunction" FunctionImportName="GetUserRequesterFunction">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetUserRequesterFunction_Result">
+                <ScalarProperty Name="Request" ColumnName="Request" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetUserSocialLinks" FunctionImportName="GetUserSocialLinks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetUserSocialLinks_Result">
+                <ScalarProperty Name="pictureUrl" ColumnName="pictureUrl" />
+                <ScalarProperty Name="pictureName" ColumnName="pictureName" />
+                <ScalarProperty Name="userUrl" ColumnName="userUrl" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="AcceptFriendProc" FunctionName="UsersDataModel.Store.AcceptFriendProc" />
+          <FunctionImportMapping FunctionImportName="AddNewFriend" FunctionName="UsersDataModel.Store.AddNewFriend" />
+          <FunctionImportMapping FunctionImportName="DenyFriendProc" FunctionName="UsersDataModel.Store.DenyFriendProc" />
+          <FunctionImportMapping FunctionImportName="GetAllUsers" FunctionName="UsersDataModel.Store.GetAllUsers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetAllUsers_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SearchUser" FunctionName="UsersDatabaseModel.Store.SearchUser">
+          <FunctionImportMapping FunctionImportName="GetFriends" FunctionName="UsersDataModel.Store.GetFriends">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="UsersDatabaseModel.SearchUser_Result">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetFriends" FunctionName="UsersDatabaseModel.Store.GetFriends" />
-          <FunctionImportMapping FunctionImportName="GetUserID" FunctionName="UsersDatabaseModel.Store.GetUserID" />
-          <FunctionImportMapping FunctionImportName="GetUserFriends" FunctionName="UsersDatabaseModel.Store.GetUserFriends">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="UsersDatabaseModel.GetUserFriends_Result">
+              <ComplexTypeMapping TypeName="UsersDataModel.GetFriends_Result">
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="PHONE" ColumnName="PHONE" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetUserID" FunctionName="UsersDataModel.Store.GetUserID" />
+          <FunctionImportMapping FunctionImportName="SearchUser" FunctionName="UsersDataModel.Store.SearchUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.SearchUser_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateCreateUCLTProc" FunctionName="UsersDataModel.Store.UpdateCreateUCLTProc" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

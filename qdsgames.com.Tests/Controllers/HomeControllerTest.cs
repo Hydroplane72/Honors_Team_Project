@@ -23,6 +23,7 @@ namespace qdsgames.com.Tests.Controllers
 
             // Assert
             Assert.IsNotNull(result);
+            
         }
 
         [TestMethod]

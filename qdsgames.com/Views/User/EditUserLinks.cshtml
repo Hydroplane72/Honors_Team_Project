@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "EditUserLinks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function linkIdChange(id)
+    {
+        var elId = "list_" + id;
+        var listId = document.getElementById(elId).value;        
+        if (id === 2) //User selected twitch
+        {
+            document.getElementById("urlInputLbl_"+id).innerHTML = "Input Username";
+            
+        }
+        else {
+            document.getElementById("urlInputLbl_" + id).innerHTML = "Input your url";
+        }
+    }
+</script>
+<h2>EditUserLinks</h2>
+<!--Beginning of Edit User Links-->
+@using (Html.BeginForm("EditUserLinks", "User", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @foreach (var link in ViewBag.UserLinks)
+        {
+
+            <hr />
+
+            <div class="form-group">
+                <div class="control-label col-md-2">
+                    Social Media
+                </div>
+                <div class="col-md-10">
+                    <select id="list_@link.id" name="list_@link.id">
+                        @foreach (var item in ViewBag.idsList)
+                        {
+                            //item.id is the control id
+                            //link.mslid is the id that the user has
+                            if (item.Id == link.mslid)
+                            {
+                                <option value="@item.Value" onclick="linkIdChange(@link.id)" selected="selected">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value" onclick="linkIdChange(@link.id)">@item.Text</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="control-label col-md-2">
+                    <p id="urlInputLbl_@link.id">Input your Url</p>
+                </div>
+                <div class="col-md-10">
+                    <input id="userId_@link.id" name="userId_@link.id" type="text" maxlength="120" placeholder="@link.userUrl" value="@link.userUrl" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<!--Start New Links-->
+@using (Html.BeginForm("NewUserLink", "User", IsPost))
+{
+    @Html.AntiForgeryToken()
+    if (@ViewBag.AllowNewLinks)
+    {
+    <div class="form-horizontal" id="NewUserLinks">
+        <hr />
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                Social Media
+            </div>
+            <div class="col-md-10">
+                <select id="Social" name="Social">
+                    @foreach (var item in ViewBag.idsList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                Type your Url
+            </div>
+            <div class="col-md-10">
+                <input id="Url" name="Url" type="text" maxlength="120" placeholder="Url" value="Url" inputmode="url"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    }
+}
+

@@ -14,21 +14,10 @@ namespace qdsgames.com.Models
     
     public partial class SECURITY
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SECURITY()
-        {
-            this.FUIDs = new HashSet<FUID>();
-            this.FUIDs1 = new HashSet<FUID>();
-        }
-    
         public int ID { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
     
         public virtual USER USER { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FUID> FUIDs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FUID> FUIDs1 { get; set; }
     }
 }

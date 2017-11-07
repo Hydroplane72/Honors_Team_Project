@@ -18,10 +18,10 @@ namespace qdsgames.com.Models
         public int FRIENDID { get; set; }
         public bool BLOCK { get; set; }
         public int USERID { get; set; }
+        public int Confirmed { get; set; }
+        public int Request { get; set; }
     
         public virtual USER USER { get; set; }
         public virtual USER USER1 { get; set; }
-        public virtual SECURITY SECURITY { get; set; }
-        public virtual SECURITY SECURITY1 { get; set; }
     }
 }

@@ -75,5 +75,19 @@ namespace qdsgames.com.Models.Security
             
             return false;
         }
+        public Boolean IsValidUrl(String input)
+        {
+            if(input!=null)
+            {
+                if(input.Contains("(") || input.Contains(")")
+                    || input.Contains("[") || input.Contains("]")
+                    || input.Contains("{") || input.Contains("}")
+                    || input.Contains("INSERT") || input.Contains("SELECT"))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

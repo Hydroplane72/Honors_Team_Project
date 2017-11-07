@@ -34,7 +34,7 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <PublishDatabases>true</PublishDatabases>
     <IncludeIisSettings>true</IncludeIisSettings>
   </PropertyGroup>
@@ -160,6 +160,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CheckFriendRequests_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBAO_DBO\Medias.cs" />
     <Compile Include="Models\DBAO_DBO\SecurityO.cs" />
     <Compile Include="Models\FOLLOW.cs">
       <DependentUpon>UsersDataModel.tt</DependentUpon>
@@ -167,13 +171,31 @@
     <Compile Include="Models\FUID.cs">
       <DependentUpon>UsersDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Function_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetAllUsers_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetFriends_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetMSLIDCount_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetMSLIDName_Result.cs">
       <DependentUpon>UsersDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetUserFriends_Result.cs">
       <DependentUpon>UsersDataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetUserSearchAll_Result.cs">
+    <Compile Include="Models\GetUserLinks_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUserRequesterFunction_Result.cs">
+      <DependentUpon>UsersDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUserSocialLinks_Result.cs">
       <DependentUpon>UsersDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LVIDEO.cs">
@@ -197,6 +219,7 @@
     <Compile Include="Models\USER.cs">
       <DependentUpon>UsersDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserEdit\LinkEdit.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\UserDBAccess.cs" />
     <Compile Include="Models\UsersDataModel.Context.cs">
@@ -235,14 +258,17 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\UsersDataModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>UsersDataModel.Context.cs</LastGenOutput>
       <DependentUpon>UsersDataModel.edmx</DependentUpon>
+      <LastGenOutput>UsersDataModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\UsersDataModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>UsersDataModel.edmx</DependentUpon>
       <LastGenOutput>UsersDataModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Photos\MSS\fb.jpg" />
+    <Content Include="Photos\MSS\instagram.jpg" />
+    <Content Include="Photos\MSS\twitch.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -292,11 +318,11 @@
     <Content Include="Views\User\AccountEdit.cshtml" />
     <Content Include="Views\User\Search.cshtml" />
     <Content Include="Views\User\Friends.cshtml" />
+    <Content Include="Views\User\EditUserLinks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
-    <Folder Include="Models\UserEdit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

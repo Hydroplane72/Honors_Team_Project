@@ -4,24 +4,20 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="61dbd9a53888474cae10412216a0cc50" Name="Diagram1">
-        <EntityTypeShape EntityType="UsersDatabaseModel.FOLLOW" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="UsersDatabaseModel.FUID" Width="1.5" PointX="5.25" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="UsersDatabaseModel.LVIDEO" Width="1.5" PointX="5.25" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="UsersDatabaseModel.SECURITY" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="UsersDatabaseModel.UCLT" Width="1.5" PointX="5.25" PointY="11.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="UsersDatabaseModel.USER" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_FOLLOWfriendid_USERid" ManuallyRouted="false" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_FOLLOWuserid_USERid" ManuallyRouted="false" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_FUIDFriendID_USERid" ManuallyRouted="false" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_FUIDuserid_USERid" ManuallyRouted="false" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_LVIDEOid_USERid" ManuallyRouted="false" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_USERID_SECURITYID" ManuallyRouted="false" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_UCLTuser_USERSid" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="UsersDatabaseModel.MSLID" Width="1.5" PointX="0.75" PointY="0.875" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_UCLTmls_MLSid" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_FUIDFriendID_USERid1" />
-        <AssociationConnector Association="UsersDatabaseModel.FK_FUIDuserid_USERid1" />
+      <Diagram DiagramId="d30196c1ea264c4fa80aadfbdb70a433" Name="Diagram1">
+        <EntityTypeShape EntityType="UsersDataModel.FOLLOW" Width="1.5" PointX="7.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDataModel.FUID" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDataModel.LVIDEO" Width="1.5" PointX="5.25" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDataModel.MSLID" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDataModel.SECURITY" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDataModel.UCLT" Width="1.5" PointX="8.25" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDataModel.USER" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <AssociationConnector Association="UsersDataModel.FK_FUIDFriendID_USERid" ManuallyRouted="false" />
+        <AssociationConnector Association="UsersDataModel.FK_FUIDuserid_USERid" ManuallyRouted="false" />
+        <AssociationConnector Association="UsersDataModel.FK_LVIDEOid_USERid" ManuallyRouted="false" />
+        <AssociationConnector Association="UsersDataModel.FK_UCLTmls_MLSid" ManuallyRouted="false" />
+        <AssociationConnector Association="UsersDataModel.FK_USERID_SECURITYID" ManuallyRouted="false" />
+        <AssociationConnector Association="UsersDataModel.FK_UCLTuser_USERSid" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

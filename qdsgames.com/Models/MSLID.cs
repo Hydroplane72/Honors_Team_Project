@@ -23,7 +23,6 @@ namespace qdsgames.com.Models
         public int ID { get; set; }
         public string NAME { get; set; }
         public string LINK { get; set; }
-        public byte[] LOGOPIC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UCLT> UCLTs { get; set; }

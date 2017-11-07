@@ -1,20 +1,25 @@
-﻿using qdsgames.com.Models;
+﻿using Newtonsoft.Json.Linq;
+using qdsgames.com.Models;
 using qdsgames.com.Models.DBAO_DBO;
-using qdsgames.com.Models.UserUtil;
+using qdsgames.com.Models.Security;
+using qdsgames.com.Models.UserEdit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
-using qdsgames.com.Models.Security;
-using System.Net;
-using Newtonsoft.Json.Linq;
 
 namespace qdsgames.com.Controllers
 {
     public class UserController : Controller
     {
+        //For user validation
         private UserValid inputValidation = new UserValid();
+
+        //keep track of num user links
+        private LinkEdit linkEdit = new LinkEdit();
+
         // Post: User
         /// <summary>
         /// Login Action. This is used for login tries. Everytime the user attempts to login the
@@ -29,7 +34,7 @@ namespace qdsgames.com.Controllers
             ViewData["loginModal"] = -100;
             int model = users.Id; //Gets the users id - this is used to figure out if the request came from login modal
             string modelUrl = users.Phone; //The return url string for login modal
-            
+
             users.Repassword = users.Password;
             if (inputValidation.UserInputValidation(users, ReturnUrl))//Checks user input
             {
@@ -65,8 +70,6 @@ namespace qdsgames.com.Controllers
             //Check previous user input again for code
             if (inputValidation.UserInputValidation(users))
             {
-
-
                 //Checks database for username and password
                 UserDBAccess userDB = new UserDBAccess();
 
@@ -141,15 +144,13 @@ namespace qdsgames.com.Controllers
         [HttpPost]
         public ActionResult NewUser(FormCollection form, Users userss)
         {
-            
             var response = Request["g-recaptcha-response"];
             string secretKey = "6LcH-TQUAAAAAPKXLLGq65vU3yo06BZ2FgGyiWxs";
             var client = new WebClient();
             var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
             var obj = JObject.Parse(result);
             var status = (bool)obj.SelectToken("success");
-            
-            
+
             //ViewBag.Message = status ? "Google reCaptcha validation success" : "Google reCaptcha validation failed";
             ViewData["loginModal"] = -100;
             Users users = new Users();
@@ -169,8 +170,6 @@ namespace qdsgames.com.Controllers
                 //Check user input
                 if (inputValidation.UserInputValidation(users) && inputValidation.UserInputValidation(userss))
                 {
-
-
                     SecurityO sec = new SecurityO();
                     sec.Username = users.Name;
                     sec.Password = users.Password;
@@ -195,9 +194,7 @@ namespace qdsgames.com.Controllers
                     ModelState.AddModelError("Username", "You input an invalid character into the text box");
                 }
             }
-                return RedirectToAction("Login", users);
-
-            
+            return RedirectToAction("Login", users);
         }
 
         public ActionResult Logout()
@@ -267,7 +264,6 @@ namespace qdsgames.com.Controllers
         [HttpPost]
         public ActionResult AccountEdit(Users users)
         {
-
             if (inputValidation.UserInputValidation(users))
             {
                 //User Logged In functionality
@@ -303,7 +299,7 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["Username"] = "Invalid data was entered into one of the text fields";
             }
-            
+
             return View(users);
         }
 
@@ -331,13 +327,12 @@ namespace qdsgames.com.Controllers
             }
             UserDBAccess db = new UserDBAccess();
             SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
-            UsersDatabaseEntities_QDSGames entity = new UsersDatabaseEntities_QDSGames();
-            
+            UsersDataEntities entity = new UsersDataEntities();
+
             var data = entity.GetAllUsers(SessionVariables.UserData.Id).ToList();
-            
+
             ViewBag.userdetails = data;
             return View();
-
         }
 
         [Authorize]
@@ -355,11 +350,10 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["Username"] = null;
             }
-            UsersDatabaseEntities_QDSGames entity = new UsersDatabaseEntities_QDSGames();
+            UsersDataEntities entity = new UsersDataEntities();
             //Search for user
             var data = entity.SearchUser(searchUser).ToList();
-            
-            
+
             ViewBag.userdetails = data;
             return View();
         }
@@ -367,7 +361,7 @@ namespace qdsgames.com.Controllers
         [Authorize]
         public ActionResult AddFriend(string UserID)
         {
-            UsersDatabaseEntities_QDSGames entity = new UsersDatabaseEntities_QDSGames();
+            UsersDataEntities entity = new UsersDataEntities();
             UserDBAccess db = new UserDBAccess();
             //create new friend
             FUID friend = new FUID();
@@ -375,12 +369,17 @@ namespace qdsgames.com.Controllers
             friend.FRIENDID = Convert.ToInt32(UserID);
             int userID = db.GetUserInfoByName(User.Identity.Name).Id;
             friend.USERID = userID;
-            db.AddFriend(friend);
-            SessionVariables.UserData.Id = userID;
-                
-            
+            friend.Confirmed = 1;
+            entity.AddNewFriend(friend.FRIENDID, friend.BLOCK, friend.USERID);
+            Users users = new Users
+            {
+                Id = friend.USERID
+            };
+            SessionVariables.UserData = users;
+
             return Redirect("/User/Friends/");
         }
+
         [Authorize]
         public ActionResult Friends()
         {
@@ -395,24 +394,253 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["Username"] = null;
             }
-            UsersDatabaseEntities_QDSGames entity = new UsersDatabaseEntities_QDSGames();
+            UsersDataEntities entity = new UsersDataEntities();
+
             UserDBAccess db = new UserDBAccess();
+
             //If the user's data is null
+
             //In other words auto logged in
-            if(SessionVariables.UserData == null)
+
+            if (SessionVariables.UserData == null)
+
             {
                 //get the user's data
+
                 SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
             }
+
             //set the users id
             int id = SessionVariables.UserData.Id;
-
             //Search for user friends and return their info by the user's id
-            var data =entity.GetUserFriends(id).ToList();
-            
+            var data = entity.GetUserFriends(id).ToList();
             ViewBag.friends = data;
-            
             return View();
+        }
+
+        [Authorize]
+        public ActionResult RequestResponsePositive(int ids)
+        {
+            int idF = Convert.ToInt32(ids);
+            UsersDataEntities entity = new UsersDataEntities();
+            UserDBAccess db = new UserDBAccess();
+
+            if (SessionVariables.UserData == null)
+            {
+                //get the user's data
+
+                SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
+            }
+
+            //set the users id
+            int id = SessionVariables.UserData.Id;
+            GetUserRequesterFunction_Result requester=  (GetUserRequesterFunction_Result) entity.GetUserRequesterFunction(idF, id);
+            if (Convert.ToInt32(requester.Request)== 2)//if user accepting is also the one that requested
+            {
+                return Redirect("/Home");
+            }
+            entity.AcceptFriendProc(idF, id);
+            return Redirect("/Home");
+        }
+
+        [Authorize]
+        public ActionResult RequestResponseNegative(String ids)
+        {
+            int idF = Convert.ToInt32(ids);
+            UsersDataEntities entity = new UsersDataEntities();
+            UserDBAccess db = new UserDBAccess();
+
+            if (SessionVariables.UserData == null)
+            {
+                //get the user's data
+
+                SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
+            }
+
+            //set the users id
+            int id = SessionVariables.UserData.Id;
+            entity.DenyFriendProc(idF, id);
+            return Redirect("/Home");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult EditUserLinks()
+        {
+            ViewData["loginModal"] = -100;
+            ViewData["UserLog"] = true;
+            if (User.Identity.Name != null || User.Identity.Name != "")
+            {
+                ViewData["UserLoggedIn"] = true;
+                ViewData["Username"] = User.Identity.Name;
+            }
+            else
+            {
+                ViewData["Username"] = null;
+            }
+            UsersDataEntities entities = new UsersDataEntities();
+
+            //Make dropdown list of MSLID
+            List<Medias> idsList = new List<Medias>();
+            var num = entities.GetMSLIDCount().FirstOrDefault().num;
+            int number = Convert.ToInt32(num);
+            Medias m;
+            for (int i = 1; i <= number; i++)
+            {
+                m = new Medias();
+
+                String name = entities.GetMSLIDName(i).FirstOrDefault().c1;
+                m.Text = name;
+                m.Value = i.ToString();
+                m.Id = i;
+                idsList.Add(m);
+            }
+            ViewBag.idsList = idsList;
+
+            UserDBAccess db = new UserDBAccess();
+            //Populate and sequence through User populated info.
+            //get user's id
+            int userID = db.GetUserInfoByName(User.Identity.Name).Id;
+            //get users links by id
+            var info = entities.GetUserLinks(userID);
+            List<GetUserLinks_Result> result = info.ToList();
+
+            //To count the number of links a user has
+            linkEdit.NumLinks = result.Count;
+            ViewBag.UserLinks = result;
+            TempData["UserLinks"] = result.Count;
+
+            //Gets the range of link ids to send to postback
+            int count = 1;
+            foreach (GetUserLinks_Result r in result)
+            {
+                TempData["UserLinkIdRange_"+count] = r.id;
+                count++;
+            }
+            
+            
+            
+            if (result.Count < 3)
+            {
+                ViewBag.AllowNewLinks = true;
+            }
+            else
+            {
+                ViewBag.AllowNewLinks = false;
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditUserLinks(FormCollection form, String link)
+        {
+            ViewData["loginModal"] = -100;
+            ViewData["UserLog"] = true;
+            if (User.Identity.Name != null || User.Identity.Name != "")
+            {
+                ViewData["UserLoggedIn"] = true;
+                ViewData["Username"] = User.Identity.Name;
+            }
+            else
+            {
+                ViewData["Username"] = null;
+            }
+            //get user's id
+            UserDBAccess db = new UserDBAccess();
+            UsersDataEntities entities = new UsersDataEntities();
+            int userID = db.GetUserInfoByName(User.Identity.Name).Id;
+            //check user input
+            Boolean check;
+            string input;
+            int mslid;
+            
+
+            //get temp data
+            List<int> userIds = new List<int>();
+            int data;
+            for(int i = 1; i<=3; i++)
+            {
+                //get int
+                data = (int)TempData["UserLinkIdRange_" + i];
+                //Set int to list
+                userIds.Add(data);
+            }
+            foreach(int i in userIds) //Go through each of the links a user has set up
+            {
+                //make sure link is valid
+                check = inputValidation.IsValidUrl(link);
+                if (check) //check is good
+                {
+                    if (form["userId_" + i].ToString() != null)
+                        check = inputValidation.IsValidUrl(form["userId_" + i].ToString());
+                    else
+                        check = false;
+                }
+                if (!check) //Check failed at some point
+                {
+                    return Redirect("/Home/Index");
+                }
+
+                //url input of user and mslid selection
+                input = form["userId_" + i].ToString();
+                mslid = Convert.ToInt32(form["list_" + i].ToString());
+                /*
+                 * This creates a new row if not already made. This also updates an mslid if already in database.
+                 */
+                if (mslid == 2 && input.Length <= 60)
+                {
+                    string backup = input;
+                    input = "https://player.twitch.tv/?channel=" + input + "&muted=true";
+                    //check and make sure ...again that input does not double up http
+                    if(input.Length > 60)
+                    {
+                        input = backup;
+                    }
+                }
+                entities.UpdateCreateUCLTProc(userID, mslid, input);
+            }
+            return Redirect("/Home/Index");
+        }
+
+        [HttpPost]
+        public ActionResult NewUserLink(FormCollection form)
+        {
+            ViewData["loginModal"] = -100;
+            ViewData["UserLog"] = true;
+            if (User.Identity.Name != null || User.Identity.Name != "")
+            {
+                ViewData["UserLoggedIn"] = true;
+                ViewData["Username"] = User.Identity.Name;
+            }
+            else
+            {
+                ViewData["Username"] = null;
+            }
+            UserDBAccess db = new UserDBAccess();
+            UsersDataEntities entities = new UsersDataEntities();
+            int userID = db.GetUserInfoByName(User.Identity.Name).Id;
+            //check user input
+            Boolean check;
+            string input;
+            int mslid;
+            linkEdit.NumLinks++;
+
+            //make sure link is valid
+            if (form["Url"].ToString() != null)
+                check = inputValidation.IsValidUrl(form["Url"].ToString());
+            else
+                check = false;
+
+            //url input of user and mslid selection
+            input = form["Url"].ToString();
+            mslid = Convert.ToInt32(form["Social"].ToString());
+            /*
+             * This creates a new row if not already made. 
+             * This also updates an mslid if already in database.
+             */
+            entities.UpdateCreateUCLTProc(userID, mslid, input);
+            return Redirect("/Home/Index");
         }
     }
 }

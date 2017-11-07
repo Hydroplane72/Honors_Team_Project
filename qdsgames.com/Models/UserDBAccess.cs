@@ -348,26 +348,64 @@ namespace qdsgames.com.Models
             return sec.ID;
         }
 
+        /// <summary>
+        /// Checks if this person is already a friend or not
+        /// </summary>
+        /// <param name="friend">The FUID parameter name </param>
+        /// <returns>True if user already a friend</returns>
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        private bool AlreadyFriend(FUID friend)
+        {
+            String userFriendCheck = "SELECT FriendID FROM FUID" +
+                " WHERE userID = @UserID AND FriendID = @fid;";
+            //Get connection
+            SqlConnection connection = new SqlConnection(GetConnectionString());
+            SqlCommand cmd = new SqlCommand(userFriendCheck, connection);
+
+            //add parameters input
+            cmd.Parameters.AddWithValue("fid", friend.FRIENDID);
+            cmd.Parameters.AddWithValue("userID", friend.USERID);
+
+            //Open connection
+            connection.Open();
+
+            //Execute command
+            SqlDataReader datareader2 = cmd.ExecuteReader();
+            if(datareader2.HasRows)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         [DataObjectMethod(DataObjectMethodType.Insert)]
         internal void AddFriend(FUID friend)
         {
             String insert = "INSERT INTO FUID " +
             " (FriendID, block, userID) " +
-            " Values (@fid, @block, @userID);";
-            using (SqlConnection con = new SqlConnection(GetConnectionString()))
-            {
-                using (SqlCommand cmd = new SqlCommand(insert, con))//Create User ID, username, and password
-                {
-                    cmd.Parameters.AddWithValue("fid", friend.FRIENDID);
-                    cmd.Parameters.AddWithValue("block", friend.BLOCK);
-                    cmd.Parameters.AddWithValue("userID", friend.USERID);
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-                
-            }
+            " Values (@fid, @block, @userID);" +
+            "INSERT INTO FUID" +
+            "(FriendID, block, userID)" +
+            "Values (@userID, @block, @fid);";
             
+            if (AlreadyFriend(friend))
+            {
+                using (SqlConnection con = new SqlConnection(GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(insert, con))//Create User ID, username, and password
+                    {
+                        cmd.Parameters.AddWithValue("fid", friend.FRIENDID);
+                        cmd.Parameters.AddWithValue("block", friend.BLOCK);
+                        cmd.Parameters.AddWithValue("userID", friend.USERID);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+            }
         }
     
         

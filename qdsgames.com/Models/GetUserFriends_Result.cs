@@ -14,7 +14,9 @@ namespace qdsgames.com.Models
     public partial class GetUserFriends_Result
     {
         public string NAME { get; set; }
-        public int id { get; set; }
+        public int ID { get; set; }
         public string PHONE { get; set; }
+        public Nullable<int> Confirmed { get; set; }
+        public Nullable<int> Request { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using qdsgames.com.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
@@ -11,10 +14,42 @@ namespace qdsgames.com.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            //Check if https
             
             ViewData["loginModal"] = -100;
             ViewData["Username"] = User.Identity.Name;
+            if(User.Identity.Name == null)
+            {
+                FormsAuthentication.SignOut();
+            }
+            UsersDataEntities entity = new UsersDataEntities();
+
+            UserDBAccess db = new UserDBAccess();
+
+            //If the user's data is null
+
+            //In other words auto logged in
+            
+            if (SessionVariables.UserData == null)
+
+            {
+                //get the user's data
+
+                SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
+            }
+
+            //set the users id
+            int id = SessionVariables.UserData.Id;
+            var requests = entity.CheckFriendRequests(id);
+            //Search for user friends and return their info by the user's id
+            var data = entity.GetUserFriends(id).ToList();
+
+            //Get links data
+            List<GetUserSocialLinks_Result> links = entity.GetUserSocialLinks(id).ToList();
+
+            //Set view Data
+            ViewBag.requests = requests;
+            ViewBag.friends = data;
+            ViewBag.Links = links;
             return View();
         }
 

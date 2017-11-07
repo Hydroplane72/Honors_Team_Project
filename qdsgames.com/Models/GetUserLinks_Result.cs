@@ -10,18 +10,14 @@
 namespace qdsgames.com.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class FOLLOW
+    public partial class GetUserLinks_Result
     {
-        public int FOLLOWID { get; set; }
-        public int USERID { get; set; }
-        public int FRIENDID { get; set; }
-        public string SFB1 { get; set; }
-        public string SFB2 { get; set; }
-        public string SFB3 { get; set; }
-        public string SFB4 { get; set; }
-        public string SFB5 { get; set; }
-        public string SFB6 { get; set; }
+        public string name { get; set; }
+        public string link { get; set; }
+        public Nullable<int> UserID { get; set; }
+        public Nullable<int> mslid { get; set; }
+        public string userUrl { get; set; }
+        public Nullable<int> id { get; set; }
     }
 }
