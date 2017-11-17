@@ -1,7 +1,9 @@
-﻿@model IEnumerable<List<qdsgames.com.Models.GetUserFriends_Result>>
+﻿
 @{
-    ViewBag.Title = "Username";
+    ViewBag.Title = "UserPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <div id="fb-root"></div>
 <script>
 (function(d, s, id) {
@@ -12,7 +14,7 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 <div class="page-header">
-    <h1>@ViewData["Username"]</h1>
+    <h1>@ViewBag.UserLookedUp</h1>
 </div>
 <div class="row">
     <div class="col-md-1">
@@ -23,7 +25,7 @@
     <div class="col-md-10">
         @foreach (var item in ViewBag.Links)
         {
-            
+
             <div class="row">
                 <div class="col-md-2">
 
@@ -33,27 +35,29 @@
                 <div class="col-md-8">
                     @if (item.id == 1)
                     {
-                        <div class="fb-page" data-href="@item.userUrl" data-tabs="timeline" data-width="500" data-height="300" 
+                        <div class="fb-page" data-href="@item.userUrl" data-tabs="timeline" data-width="500" data-height="300"
                              data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
                             <blockquote cite="@item.userUrl" class="fb-xfbml-parse-ignore">
-                            <a href="@item.userUrl">Facebook</a></blockquote></div>
+                                <a href="@item.userUrl">Facebook</a>
+                            </blockquote>
+                        </div>
                     }
                     else if (item.id == 2)
                     {
                         <iframe src="@item.userUrl"
                                 height="300"
                                 width="500"
-                                frameborder="0"
-                                scrolling="no"
+                                frameborder="1"
+                                scrolling="yes"
                                 allowfullscreen="true"></iframe>
                     }
                     else
                     {
 
-                        <iframe src="@item.userUrl">
+                        <iframe src="@item.userUrl" height="300" width="500">
                             Your browser does not support iframes.
                         </iframe>
-                        }
+                    }
                 </div>
                 <div class="col-md-2"><p>Social Media Video</p></div>
             </div>
@@ -62,46 +66,23 @@
     <div class="col-md-1">
         <!--Friends list start-->
         <h2>Friends List</h2>
-        @using (Html.BeginForm("RequestResponsePositive", "User", IsPost))
-        {
+        
 
-            <table name="userTable">
+            <table name="UserFriends">
 
                 @foreach (var item in ViewBag.friends)
                 {
                     <tr class="row">
                         <td class="col-lg-4">
-                            <a href="/UserPage/@item.NAME">@item.NAME</a>
+                            <a href="@item.NAME">@item.NAME</a>
                         </td>
-
-                        @if (item.Confirmed == 1 && item.Request != 2)
-                        {
-                            <td class="col-lg-4">
-
-                                @Html.Hidden("ids", (int)item.ID)
-                                @Html.ActionLink("Accept me", "RequestResponsePositive", "User", new { ids = (Object)item.ID }, null)
-                            </td>
-                            <td class="col-lg-4">
-                                @Html.Hidden("ids", (int)item.ID)
-                                @Html.ActionLink("Deny me", "RequestResponseNegative", "User", new { ids = (Object)item.ID }, null)
-                            </td>
-                        }
-                        else if (item.Confirmed != 1)
-                        {
-                            <td class="col-lg-8">
-                                Confirmed
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="col-lg-8">
-                                Unconfirmed
-                            </td>
-                        }
                     </tr>
                 }
             </table>
-        }
+        
         <!--Friends list start-->
     </div>
 </div>
+
+
+

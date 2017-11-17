@@ -144,13 +144,15 @@ namespace qdsgames.com.Controllers
         [HttpPost]
         public ActionResult NewUser(FormCollection form, Users userss)
         {
+            /*
             var response = Request["g-recaptcha-response"];
             string secretKey = "6LcH-TQUAAAAAPKXLLGq65vU3yo06BZ2FgGyiWxs";
             var client = new WebClient();
             var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
             var obj = JObject.Parse(result);
             var status = (bool)obj.SelectToken("success");
-
+            */
+            var status = true;
             //ViewBag.Message = status ? "Google reCaptcha validation success" : "Google reCaptcha validation failed";
             ViewData["loginModal"] = -100;
             Users users = new Users();
@@ -179,8 +181,6 @@ namespace qdsgames.com.Controllers
                     if (correct)
                     {
                         SessionVariables.UserData = users;
-                        ViewData["Username"] = SessionVariables.UserData.Name;
-                        FormsAuthentication.SetAuthCookie(users.Name, users.Rememberme); //Add user to authentication
                     }
                     else
                     {
@@ -194,6 +194,8 @@ namespace qdsgames.com.Controllers
                     ModelState.AddModelError("Username", "You input an invalid character into the text box");
                 }
             }
+
+            //Default
             return RedirectToAction("Login", users);
         }
 
@@ -327,11 +329,15 @@ namespace qdsgames.com.Controllers
             }
             UserDBAccess db = new UserDBAccess();
             SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
-            UsersDataEntities entity = new UsersDataEntities();
-
-            var data = entity.GetAllUsers(SessionVariables.UserData.Id).ToList();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
+            int userID = SessionVariables.UserData.Id;
+            //Get all the users
+            List<GetAllUsers_Result> data = entity.GetAllUsers(userID).ToList();
+            //Get the users friends
+            List<GetUserFriends_Result> userFriends = entity.GetUserFriends(userID).ToList();
 
             ViewBag.userdetails = data;
+            ViewBag.userFriends = userFriends;
             return View();
         }
 
@@ -350,7 +356,7 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["Username"] = null;
             }
-            UsersDataEntities entity = new UsersDataEntities();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
             //Search for user
             var data = entity.SearchUser(searchUser).ToList();
 
@@ -361,7 +367,7 @@ namespace qdsgames.com.Controllers
         [Authorize]
         public ActionResult AddFriend(string UserID)
         {
-            UsersDataEntities entity = new UsersDataEntities();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
             UserDBAccess db = new UserDBAccess();
             //create new friend
             FUID friend = new FUID();
@@ -370,7 +376,21 @@ namespace qdsgames.com.Controllers
             int userID = db.GetUserInfoByName(User.Identity.Name).Id;
             friend.USERID = userID;
             friend.Confirmed = 1;
-            entity.AddNewFriend(friend.FRIENDID, friend.BLOCK, friend.USERID);
+            List<GetUserFriends_Result> usersFriends = entity.GetUserFriends(userID).ToList();
+            bool friended = false;
+            //Check each id for if already friend
+            foreach (GetUserFriends_Result uf in usersFriends)
+            {
+                if (uf.ID == userID)
+                {
+                    friended = true;
+                }
+            }
+            if (!friended)
+            {
+                entity.AddNewFriend(friend.FRIENDID, friend.BLOCK, friend.USERID);
+            }
+
             Users users = new Users
             {
                 Id = friend.USERID
@@ -394,7 +414,7 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["Username"] = null;
             }
-            UsersDataEntities entity = new UsersDataEntities();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
 
             UserDBAccess db = new UserDBAccess();
 
@@ -413,7 +433,13 @@ namespace qdsgames.com.Controllers
             //set the users id
             int id = SessionVariables.UserData.Id;
             //Search for user friends and return their info by the user's id
-            var data = entity.GetUserFriends(id).ToList();
+            var data = entity.GetAllUsersFunc(id);
+            foreach (GetAllUsersFunc_Result user in data)
+            {
+                if (!user.friend.HasValue) //if null
+                {
+                }
+            }
             ViewBag.friends = data;
             return View();
         }
@@ -422,7 +448,7 @@ namespace qdsgames.com.Controllers
         public ActionResult RequestResponsePositive(int ids)
         {
             int idF = Convert.ToInt32(ids);
-            UsersDataEntities entity = new UsersDataEntities();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
             UserDBAccess db = new UserDBAccess();
 
             if (SessionVariables.UserData == null)
@@ -434,8 +460,8 @@ namespace qdsgames.com.Controllers
 
             //set the users id
             int id = SessionVariables.UserData.Id;
-            GetUserRequesterFunction_Result requester=  (GetUserRequesterFunction_Result) entity.GetUserRequesterFunction(idF, id);
-            if (Convert.ToInt32(requester.Request)== 2)//if user accepting is also the one that requested
+            List<GetUserRequesterFunction_Result> requester = entity.GetUserRequesterFunction(idF, id).ToList();
+            if (Convert.ToInt32(requester[0].Request) == 2)//if user accepting is also the one that requested
             {
                 return Redirect("/Home");
             }
@@ -447,7 +473,7 @@ namespace qdsgames.com.Controllers
         public ActionResult RequestResponseNegative(String ids)
         {
             int idF = Convert.ToInt32(ids);
-            UsersDataEntities entity = new UsersDataEntities();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
             UserDBAccess db = new UserDBAccess();
 
             if (SessionVariables.UserData == null)
@@ -478,7 +504,7 @@ namespace qdsgames.com.Controllers
             {
                 ViewData["Username"] = null;
             }
-            UsersDataEntities entities = new UsersDataEntities();
+            UsersDatabaseEntities entities = new UsersDatabaseEntities();
 
             //Make dropdown list of MSLID
             List<Medias> idsList = new List<Medias>();
@@ -514,12 +540,10 @@ namespace qdsgames.com.Controllers
             int count = 1;
             foreach (GetUserLinks_Result r in result)
             {
-                TempData["UserLinkIdRange_"+count] = r.id;
+                TempData["UserLinkIdRange_" + count] = r.id;
                 count++;
             }
-            
-            
-            
+
             if (result.Count < 3)
             {
                 ViewBag.AllowNewLinks = true;
@@ -548,25 +572,27 @@ namespace qdsgames.com.Controllers
             }
             //get user's id
             UserDBAccess db = new UserDBAccess();
-            UsersDataEntities entities = new UsersDataEntities();
+            UsersDatabaseEntities entities = new UsersDatabaseEntities();
             int userID = db.GetUserInfoByName(User.Identity.Name).Id;
             //check user input
             Boolean check;
             string input;
             int mslid;
-            
 
             //get temp data
             List<int> userIds = new List<int>();
             int data;
-            for(int i = 1; i<=3; i++)
+            for (int i = 1; i <= 3 && i <= (int)TempData["UserLinks"]; i++)
             {
-                //get int
-                data = (int)TempData["UserLinkIdRange_" + i];
-                //Set int to list
-                userIds.Add(data);
+                if (TempData["UserLinkIdRange_" + i] != null)
+                {
+                    //get int
+                    data = (int)TempData["UserLinkIdRange_" + i];
+                    //Set int to list
+                    userIds.Add(data);
+                }
             }
-            foreach(int i in userIds) //Go through each of the links a user has set up
+            foreach (int i in userIds) //Go through each of the links a user has set up
             {
                 //make sure link is valid
                 check = inputValidation.IsValidUrl(link);
@@ -593,12 +619,13 @@ namespace qdsgames.com.Controllers
                     string backup = input;
                     input = "https://player.twitch.tv/?channel=" + input + "&muted=true";
                     //check and make sure ...again that input does not double up http
-                    if(input.Length > 60)
+                    if (input.Length > 60)
                     {
                         input = backup;
                     }
                 }
-                entities.UpdateCreateUCLTProc(userID, mslid, input);
+
+                entities.UpdateUCLTProc(userID, mslid, input);
             }
             return Redirect("/Home/Index");
         }
@@ -618,7 +645,7 @@ namespace qdsgames.com.Controllers
                 ViewData["Username"] = null;
             }
             UserDBAccess db = new UserDBAccess();
-            UsersDataEntities entities = new UsersDataEntities();
+            UsersDatabaseEntities entities = new UsersDatabaseEntities();
             int userID = db.GetUserInfoByName(User.Identity.Name).Id;
             //check user input
             Boolean check;
@@ -636,11 +663,64 @@ namespace qdsgames.com.Controllers
             input = form["Url"].ToString();
             mslid = Convert.ToInt32(form["Social"].ToString());
             /*
-             * This creates a new row if not already made. 
+             * This creates a new row if not already made.
              * This also updates an mslid if already in database.
              */
-            entities.UpdateCreateUCLTProc(userID, mslid, input);
+            List<GetUserSocialLinks_Result> links = entities.GetUserSocialLinks(userID).ToList();
+            Boolean found = false;
+            //Check if mslid is used already and if link is used already
+            foreach (GetUserSocialLinks_Result link in links)
+            {
+                if (link.userUrl == input || link.id == mslid)
+                {
+                    found = true;
+                }
+            }
+
+            //if user input not found already in database
+            if (!found)
+            {
+                entities.NewUCLTProc(userID, mslid, input);
+            }
+
             return Redirect("/Home/Index");
+        }
+
+        public ActionResult UserPage(string userName)
+        {
+            //get user data
+            ViewData["loginModal"] = -100;
+            ViewData["UserLog"] = true;
+            if (User.Identity.Name != null || User.Identity.Name != "")
+            {
+                ViewData["UserLoggedIn"] = true;
+                ViewData["Username"] = User.Identity.Name;
+            }
+            else
+            {
+                ViewData["Username"] = null;
+            }
+            //set the looked up user name
+            ViewData["UserLookedUp"] = userName;
+            //get searched user
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
+            UserDBAccess db = new UserDBAccess();
+
+            //get user info by name
+            SessionVariables.UserPage = db.GetUserInfoByName(userName);
+
+            //set the users id
+            int id = SessionVariables.UserPage.Id;
+
+            //Search for user friends and return their info by the user's id
+            var friends = entity.GetUserFriends(id).ToList();
+            //Get links data
+            List<GetUserSocialLinks_Result> links = entity.GetUserSocialLinks(id).ToList();
+
+            //Set view Data
+            ViewBag.friends = friends;
+            ViewBag.Links = links;
+            return View();
         }
     }
 }

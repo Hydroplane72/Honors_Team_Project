@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="UsersDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="UsersDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="FOLLOW">
           <Key>
             <PropertyRef Name="FOLLOWID" />
@@ -177,7 +177,6 @@
             </CollectionType>
           </ReturnType>
         </Function>
-        <Function Name="CountMSLID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="DenyFriendProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FriendID" Type="int" Mode="In" />
           <Parameter Name="UserID" Type="int" Mode="In" />
@@ -197,6 +196,18 @@
         <Function Name="GetAllUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IDIn" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetAllUsersFunc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="id" Type="int" />
+                <Property Name="name" Type="varchar" MaxLength="50" />
+                <Property Name="friend" Type="int" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="GetFriends" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userIDs" Type="int" Mode="In" />
         </Function>
@@ -215,6 +226,16 @@
             <CollectionType>
               <RowType>
                 <Property Name="c1" Type="varchar" MaxLength="20" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetSearchedUserFriends" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userIDs" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="NAME" Type="varchar" MaxLength="50" Nullable="false" />
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -251,10 +272,6 @@
             </CollectionType>
           </ReturnType>
         </Function>
-        <Function Name="GetUserRequester" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
-          <Parameter Name="FriendID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="int" Mode="In" />
-        </Function>
         <Function Name="GetUserRequesterFunction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FriendID" Type="int" Mode="In" />
           <Parameter Name="UserID" Type="int" Mode="In" />
@@ -279,10 +296,20 @@
             </CollectionType>
           </ReturnType>
         </Function>
+        <Function Name="NewUCLTProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="Mslid" Type="int" Mode="In" />
+          <Parameter Name="Url" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SearchUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="username" Type="varchar" Mode="In" />
         </Function>
         <Function Name="UpdateCreateUCLTProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="Mslid" Type="int" Mode="In" />
+          <Parameter Name="Url" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="UpdateUCLTProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="Mslid" Type="int" Mode="In" />
           <Parameter Name="Url" Type="varchar" Mode="In" />
@@ -320,8 +347,7 @@
             <End Role="USERS" EntitySet="USERS" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="UsersDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -333,11 +359,19 @@
           <Property Name="c1" Type="Int32" />
           <Property Name="c2" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
         </ComplexType>
+        <ComplexType Name="GetAllUsersFunc_Result">
+          <Property Name="id" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="friend" Type="Int32" />
+        </ComplexType>
         <ComplexType Name="GetMSLIDCount_Result">
           <Property Name="num" Type="Int32" />
         </ComplexType>
         <ComplexType Name="GetMSLIDName_Result">
           <Property Name="c1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </ComplexType>
+        <ComplexType Name="GetSearchedUserFriends_Result">
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
         </ComplexType>
         <ComplexType Name="GetUserFriends_Result">
           <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
@@ -527,7 +561,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="UsersDataEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="UsersDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="FOLLOWs" EntityType="Self.FOLLOW" />
           <EntitySet Name="FUIDs" EntityType="Self.FUID" />
           <EntitySet Name="LVIDEOs" EntityType="Self.LVIDEO" />
@@ -560,28 +594,34 @@
             <End Role="UCLT" EntitySet="UCLTs" />
           </AssociationSet>
           <FunctionImport Name="CheckFriendRequests" IsComposable="true" ReturnType="Collection(UsersDataModel.CheckFriendRequests_Result)">
-            <Parameter Name="userID" Mode="In" Type="Int32" />
+          <Parameter Name="userID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Function" IsComposable="true" ReturnType="Collection(UsersDataModel.Function_Result)">
             <Parameter Name="param1" Mode="In" Type="Int32" />
             <Parameter Name="param2" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="GetAllUsersFunc" IsComposable="true" ReturnType="Collection(UsersDataModel.GetAllUsersFunc_Result)">
+          <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="GetMSLIDCount" IsComposable="true" ReturnType="Collection(UsersDataModel.GetMSLIDCount_Result)" />
           <FunctionImport Name="GetMSLIDName" IsComposable="true" ReturnType="Collection(UsersDataModel.GetMSLIDName_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetSearchedUserFriends" IsComposable="true" ReturnType="Collection(UsersDataModel.GetSearchedUserFriends_Result)">
+          <Parameter Name="userIDs" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetUserFriends" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserFriends_Result)">
-            <Parameter Name="userIDs" Mode="In" Type="Int32" />
+          <Parameter Name="userIDs" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetUserLinks" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserLinks_Result)">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          <Parameter Name="UserId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetUserRequesterFunction" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserRequesterFunction_Result)">
             <Parameter Name="FriendID" Mode="In" Type="Int32" />
             <Parameter Name="UserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetUserSocialLinks" IsComposable="true" ReturnType="Collection(UsersDataModel.GetUserSocialLinks_Result)">
-            <Parameter Name="userID" Mode="In" Type="Int32" />
+          <Parameter Name="userID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="AcceptFriendProc">
             <Parameter Name="FriendId" Mode="In" Type="Int32" />
@@ -597,18 +637,28 @@
             <Parameter Name="UserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllUsers" ReturnType="Collection(UsersDataModel.GetAllUsers_Result)">
-            <Parameter Name="IDIn" Mode="In" Type="Int32" />
+          <Parameter Name="IDIn" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetFriends" ReturnType="Collection(UsersDataModel.GetFriends_Result)">
-            <Parameter Name="userIDs" Mode="In" Type="Int32" />
+          <Parameter Name="userIDs" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetUserID" ReturnType="Collection(Int32)">
-            <Parameter Name="username" Mode="In" Type="String" />
+          <Parameter Name="username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="NewUCLTProc">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="Mslid" Mode="In" Type="Int32" />
+            <Parameter Name="Url" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SearchUser" ReturnType="Collection(UsersDataModel.SearchUser_Result)">
-            <Parameter Name="username" Mode="In" Type="String" />
+          <Parameter Name="username" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="UpdateCreateUCLTProc">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="Mslid" Mode="In" Type="Int32" />
+            <Parameter Name="Url" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateUCLTProc">
             <Parameter Name="UserID" Mode="In" Type="Int32" />
             <Parameter Name="Mslid" Mode="In" Type="Int32" />
             <Parameter Name="Url" Mode="In" Type="String" />
@@ -632,7 +682,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="UsersDataModelStoreContainer" CdmEntityContainer="UsersDataEntities">
+        <EntityContainerMapping StorageEntityContainer="UsersDataModelStoreContainer" CdmEntityContainer="UsersDatabaseEntities">
           <EntitySetMapping Name="FOLLOWs">
             <EntityTypeMapping TypeName="UsersDataModel.FOLLOW">
               <MappingFragment StoreEntitySet="FOLLOW">
@@ -736,6 +786,15 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetAllUsersFunc" FunctionImportName="GetAllUsersFunc">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetAllUsersFunc_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="friend" ColumnName="friend" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionName="UsersDataModel.Store.GetMSLIDCount" FunctionImportName="GetMSLIDCount">
             <ResultMapping>
               <ComplexTypeMapping TypeName="UsersDataModel.GetMSLIDCount_Result">
@@ -747,6 +806,13 @@
             <ResultMapping>
               <ComplexTypeMapping TypeName="UsersDataModel.GetMSLIDName_Result">
                 <ScalarProperty Name="c1" ColumnName="c1" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="UsersDataModel.Store.GetSearchedUserFriends" FunctionImportName="GetSearchedUserFriends">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UsersDataModel.GetSearchedUserFriends_Result">
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -811,6 +877,7 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetUserID" FunctionName="UsersDataModel.Store.GetUserID" />
+          <FunctionImportMapping FunctionImportName="NewUCLTProc" FunctionName="UsersDataModel.Store.NewUCLTProc" />
           <FunctionImportMapping FunctionImportName="SearchUser" FunctionName="UsersDataModel.Store.SearchUser">
             <ResultMapping>
               <ComplexTypeMapping TypeName="UsersDataModel.SearchUser_Result">
@@ -820,6 +887,7 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="UpdateCreateUCLTProc" FunctionName="UsersDataModel.Store.UpdateCreateUCLTProc" />
+          <FunctionImportMapping FunctionImportName="UpdateUCLTProc" FunctionName="UsersDataModel.Store.UpdateUCLTProc" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

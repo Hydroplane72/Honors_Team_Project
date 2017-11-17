@@ -10,25 +10,23 @@ namespace qdsgames.com.Controllers
 {
     public class HomeController : Controller
     {
-
         [Authorize]
         public ActionResult Index()
         {
-            
             ViewData["loginModal"] = -100;
             ViewData["Username"] = User.Identity.Name;
-            if(User.Identity.Name == null)
+            if (User.Identity.Name == null)
             {
                 FormsAuthentication.SignOut();
             }
-            UsersDataEntities entity = new UsersDataEntities();
+            UsersDatabaseEntities entity = new UsersDatabaseEntities();
 
             UserDBAccess db = new UserDBAccess();
 
             //If the user's data is null
 
             //In other words auto logged in
-            
+
             if (SessionVariables.UserData == null)
 
             {
@@ -55,7 +53,7 @@ namespace qdsgames.com.Controllers
 
         public ActionResult About()
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 ViewData["loginModal"] = -100;
                 ViewData["Username"] = User.Identity.Name;
@@ -83,6 +81,7 @@ namespace qdsgames.com.Controllers
 
             return View();
         }
+
         //Becuase the _Layout go directly to Home
         public ActionResult Logout()
         {
@@ -90,6 +89,7 @@ namespace qdsgames.com.Controllers
             FormsAuthentication.SignOut();
             return Redirect("/Home/Index");
         }
+
         public ActionResult AccountEdit()
         {
             return Redirect("/User/AccountEdit");

@@ -43,7 +43,8 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Login" class="btn btn-default" />
-                @Html.LabelFor(Model => Model.Rememberme, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.Label("Remember me")
+                
                 @Html.CheckBoxFor(Model => Model.Rememberme, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
