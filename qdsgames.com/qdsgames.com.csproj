@@ -287,6 +287,7 @@
     <Content Include="Models\UsersDataModel.edmx.diagram">
       <DependentUpon>UsersDataModel.edmx</DependentUpon>
     </Content>
+    <Content Include="App_Data\Terms of Use.docx" />
     <None Include="Properties\PublishProfiles\QDSGames.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -329,7 +330,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
-    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

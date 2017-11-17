@@ -170,7 +170,11 @@
                 @Html.EditorFor(Model => Model.Rememberme)
             </div>
             <div class="g-recaptcha" data-sitekey="6LcH-TQUAAAAAHo16EQO0Eipy_62Fb-9vqGBkk60" data-callback="YourOnSubmitFn"></div>
-                <div class="clearfix">
+            <div class="input-group">
+                <p>I agree with QDSGAMES terms and service which can be found <a href="~/App_Data/Terms of Use.docx" download>here</a>.</p>
+                <input type="checkbox" title="Agree" name="Agree" required/> Agree
+            </div>    
+            <div class="clearfix">
                     <button type="button" onclick="document.getElementById('signUpModal').style.display='none'" class="cancelbtn">Cancel</button>
                     <button type="submit" class="signupbtn" formmethod="post">Register</button>
                 </div>

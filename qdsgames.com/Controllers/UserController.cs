@@ -144,19 +144,20 @@ namespace qdsgames.com.Controllers
         [HttpPost]
         public ActionResult NewUser(FormCollection form, Users userss)
         {
-            /*
+            
             var response = Request["g-recaptcha-response"];
             string secretKey = "6LcH-TQUAAAAAPKXLLGq65vU3yo06BZ2FgGyiWxs";
             var client = new WebClient();
             var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
             var obj = JObject.Parse(result);
             var status = (bool)obj.SelectToken("success");
-            */
-            var status = true;
+            
+            
             //ViewBag.Message = status ? "Google reCaptcha validation success" : "Google reCaptcha validation failed";
             ViewData["loginModal"] = -100;
             Users users = new Users();
-            if (status)
+            bool agreed = form["agree"].Equals("on");
+            if (status && agreed)
             {
                 //New user db Access function
 
