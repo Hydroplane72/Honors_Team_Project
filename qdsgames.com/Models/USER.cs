@@ -36,6 +36,7 @@ namespace qdsgames.com.Models
         public Nullable<bool> BAN { get; set; }
         public Nullable<System.DateTime> CREATEDATE { get; set; }
         public Nullable<System.DateTime> LASTONDATE { get; set; }
+        public byte TermsAgree { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FUID> FUIDs { get; set; }

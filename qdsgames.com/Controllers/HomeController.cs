@@ -1,4 +1,5 @@
 ﻿using qdsgames.com.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,8 +20,9 @@ namespace qdsgames.com.Controllers
             {
                 FormsAuthentication.SignOut();
             }
+            
             UsersDatabaseEntities entity = new UsersDatabaseEntities();
-
+            
             UserDBAccess db = new UserDBAccess();
 
             //If the user's data is null
@@ -37,13 +39,22 @@ namespace qdsgames.com.Controllers
 
             //set the users id
             int id = SessionVariables.UserData.Id;
+            //check term of use agreements
+            //0 = false 1=true
+            int agree = Convert.ToInt32(entity.AgreedTermsUseFunc(id).FirstOrDefault());
+            //redirect to agree to terms of use
+            if (agree ==0)
+            {
+                return Redirect("/User/TermsAgree");
+            }
+            //check for friend requests
             var requests = entity.CheckFriendRequests(id);
             //Search for user friends and return their info by the user's id
             var data = entity.GetUserFriends(id).ToList();
 
             //Get links data
             List<GetUserSocialLinks_Result> links = entity.GetUserSocialLinks(id).ToList();
-
+            
             //Set view Data
             ViewBag.requests = requests;
             ViewBag.friends = data;

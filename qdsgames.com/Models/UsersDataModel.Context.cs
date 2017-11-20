@@ -268,5 +268,24 @@ namespace qdsgames.com.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUCLTProc", userIDParameter, mslidParameter, urlParameter);
         }
+    
+        [DbFunction("UsersDatabaseEntities", "AgreedTermsUseFunc")]
+        public virtual IQueryable<Nullable<byte>> AgreedTermsUseFunc(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Nullable<byte>>("[UsersDatabaseEntities].[AgreedTermsUseFunc](@userId)", userIdParameter);
+        }
+    
+        public virtual int AgreeToTermsOfUse(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AgreeToTermsOfUse", userIDParameter);
+        }
     }
 }

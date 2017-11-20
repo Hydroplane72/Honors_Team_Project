@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TermsAgree</title>
+</head>
+<body>
+    
+    @using (Html.BeginForm("TermsAgree", "User", FormMethod.Post))
+    {
+        <div class="form-group">
+            <p>We have updated our Terms of Agreement to be able to continue we need you to agree to the terms of use.</p>
+            <p>Please look through the updated terms and conditions <a href="~/Photos/Terms_of_Use.htm">here</a>.</p>
+
+        </div>
+        <div class="form-control">
+            
+            <button type="submit">Agree to New Terms</button>
+        </div>
+        
+    }
+        
+    
+</body>
+</html>

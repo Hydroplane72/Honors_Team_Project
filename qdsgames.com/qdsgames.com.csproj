@@ -275,6 +275,7 @@
     <Content Include="Photos\MSS\fb.jpg" />
     <Content Include="Photos\MSS\instagram.jpg" />
     <Content Include="Photos\MSS\twitch.jpg" />
+    <Content Include="Photos\Terms_of_Use.htm" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -287,7 +288,8 @@
     <Content Include="Models\UsersDataModel.edmx.diagram">
       <DependentUpon>UsersDataModel.edmx</DependentUpon>
     </Content>
-    <Content Include="App_Data\Terms of Use.docx" />
+    <Content Include="Photos\Terms_of_Use.docx" />
+    <Content Include="Photos\Terms_of_Use.mht" />
     <None Include="Properties\PublishProfiles\QDSGames.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -327,9 +329,11 @@
     <Content Include="Views\User\Friends.cshtml" />
     <Content Include="Views\User\EditUserLinks.cshtml" />
     <Content Include="Views\User\UserPage.cshtml" />
+    <Content Include="Views\User\TermsAgree.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

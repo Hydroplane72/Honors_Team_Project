@@ -84,6 +84,7 @@
           <Property Name="BAN" Type="bit" />
           <Property Name="CREATEDATE" Type="datetime2" Precision="7" />
           <Property Name="LASTONDATE" Type="datetime2" Precision="7" />
+          <Property Name="TermsAgree" Type="tinyint" Nullable="false" />
         </EntityType>
         <Association Name="FK_FUIDFriendID_USERid">
           <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
@@ -165,6 +166,19 @@
           <Parameter Name="FriendIDIN" Type="int" Mode="In" />
           <Parameter Name="BlockIN" Type="bit" Mode="In" />
           <Parameter Name="UserIDIn" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AgreedTermsUseFunc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="TermsAgree" Type="tinyint" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="AgreeToTermsOfUse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
         </Function>
         <Function Name="CheckFriendRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userID" Type="int" Mode="In" />
@@ -488,6 +502,7 @@
           <NavigationProperty Name="LVIDEO" Relationship="Self.FK_LVIDEOid_USERid" FromRole="USERS" ToRole="LVIDEO" />
           <NavigationProperty Name="SECURITY" Relationship="Self.FK_USERID_SECURITYID" FromRole="USERS" ToRole="SECURITY" />
           <NavigationProperty Name="UCLTs" Relationship="Self.FK_UCLTuser_USERSid" FromRole="USERS" ToRole="UCLT" />
+          <Property Name="TermsAgree" Type="Byte" Nullable="false" />
         </EntityType>
         <Association Name="FK_FUIDFriendID_USERid">
           <End Role="USERS" Type="Self.USER" Multiplicity="1" />
@@ -663,6 +678,12 @@
             <Parameter Name="Mslid" Mode="In" Type="Int32" />
             <Parameter Name="Url" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="AgreedTermsUseFunc" IsComposable="true" ReturnType="Collection(Byte)">
+          <Parameter Name="userId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AgreeToTermsOfUse">
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetAllUsers_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -753,6 +774,7 @@
           <EntitySetMapping Name="USERS">
             <EntityTypeMapping TypeName="UsersDataModel.USER">
               <MappingFragment StoreEntitySet="USERS">
+                <ScalarProperty Name="TermsAgree" ColumnName="TermsAgree" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
                 <ScalarProperty Name="DOB" ColumnName="DOB" />
@@ -888,6 +910,8 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="UpdateCreateUCLTProc" FunctionName="UsersDataModel.Store.UpdateCreateUCLTProc" />
           <FunctionImportMapping FunctionImportName="UpdateUCLTProc" FunctionName="UsersDataModel.Store.UpdateUCLTProc" />
+          <FunctionImportMapping FunctionImportName="AgreedTermsUseFunc" FunctionName="UsersDataModel.Store.AgreedTermsUseFunc" />
+          <FunctionImportMapping FunctionImportName="AgreeToTermsOfUse" FunctionName="UsersDataModel.Store.AgreeToTermsOfUse" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

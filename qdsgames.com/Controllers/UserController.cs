@@ -176,12 +176,17 @@ namespace qdsgames.com.Controllers
                     SecurityO sec = new SecurityO();
                     sec.Username = users.Name;
                     sec.Password = users.Password;
-
+                    UserDBAccess db = new UserDBAccess();
                     //Create user in Database
                     bool correct = UserDBAccess.CreateUserAccount(users, sec);
                     if (correct)
                     {
                         SessionVariables.UserData = users;
+                        //get users id by name
+                       users = db.GetUserInfoByName(users.Name);
+                        //set agreed
+                        UsersDatabaseEntities entities = new UsersDatabaseEntities();
+                        entities.AgreeToTermsOfUse(users.Id);
                     }
                     else
                     {
@@ -722,6 +727,24 @@ namespace qdsgames.com.Controllers
             ViewBag.friends = friends;
             ViewBag.Links = links;
             return View();
+        }
+
+        [Authorize]
+        public ActionResult TermsAgree()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult TermsAgree(String id)
+        {
+            UserDBAccess db = new UserDBAccess();
+            SessionVariables.UserData = db.GetUserInfoByName(User.Identity.Name);
+            UsersDatabaseEntities entities = new UsersDatabaseEntities();
+            //User agreed to terms of use
+            entities.AgreeToTermsOfUse(SessionVariables.UserData.Id);
+            return Redirect("/Home/Index");
         }
     }
 }

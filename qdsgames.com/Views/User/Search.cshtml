@@ -6,7 +6,7 @@
 }
 <div class="containers">
     <!--Search textbox form-->
-    @using (Html.BeginForm("Search", "User", IsPost))
+    @using (Html.BeginForm("Search", "User", FormMethod.Post))
     {
 
         <div class="form-group">
@@ -17,7 +17,7 @@
     }
 
     <!--Add Friend Form-->
-    @using (Html.BeginForm("AddFriend", "User", IsPost))
+    @using (Html.BeginForm("AddFriend", "User", FormMethod.Post))
     {
         <table name="userTable">
             <tr>
@@ -32,7 +32,7 @@
                 <tr>
                     
                     <td>
-                        <a href="@item.name">@item.name</a>
+                        <a href="/UserPage/@item.name">@item.name</a>
                     </td>
                     
                     <td>
